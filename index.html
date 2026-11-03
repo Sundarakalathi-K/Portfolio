@@ -1,0 +1,1689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sundarakalathi K — SAP MM Functional Consultant</title>
+<meta name="description" content="Sundarakalathi K — SAP MM Functional Consultant. ECC 6.0 & S/4HANA, Procure-to-Pay, MM-FI integration, rollouts and AMS support. Chennai, India."/>
+<meta name="theme-color" content="#161309"/>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23161309'/%3E%3Ctext x='32' y='45' font-family='Georgia,serif' font-style='italic' font-size='38' fill='%23FF5A28' text-anchor='middle'%3EK%3C/text%3E%3C/svg%3E"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add('js')</script>
+<style>
+/* ============ TOKENS ============ */
+:root{
+  --paper:#F3F0E7; --ink:#191611; --bg:var(--paper); --fg:var(--ink);
+  --muted:rgba(25,22,17,.58); --soft:rgba(25,22,17,.8); --line:rgba(25,22,17,.16);
+  --accent:#D9481C;
+  --serif:'Fraunces',Georgia,serif; --sans:'Space Grotesk',sans-serif; --mono:'IBM Plex Mono',monospace;
+  --ease:cubic-bezier(.19,1,.22,1);
+}
+/* FIX: .dark now actually PAINTS the dark background (it only swapped variables before,
+   leaving cream text on the cream page = invisible) */
+.dark{
+  --bg:#161309; --fg:#F3F0E7;
+  --muted:rgba(243,240,231,.8);
+  --soft:rgba(243,240,231,.92);
+  --line:rgba(243,240,231,.22);
+  --accent:#FF5A28;
+  background:var(--bg);
+  color:var(--fg);
+}
+/* hardcoded guarantee, independent of variable scoping */
+#process,footer{background:#161309;color:#F3F0E7}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:5.5rem}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:1rem;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body.loading,body.lock{overflow:hidden}
+::selection{background:var(--accent);color:#F3F0E7}
+::-webkit-scrollbar{width:10px}
+::-webkit-scrollbar-track{background:#E9E5D9}
+::-webkit-scrollbar-thumb{background:#191611;border:2px solid #E9E5D9}
+a{color:inherit}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.mono{font-family:var(--mono);font-weight:400;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase}
+.wrap{max-width:1240px;margin:0 auto}
+.sec{padding:clamp(4.5rem,9vw,8.5rem) clamp(1.25rem,4vw,4rem)}
+svg{display:block}
+
+/* ============ SECTION HEADERS ============ */
+.sec-top{display:flex;align-items:center;gap:1.25rem;flex-wrap:wrap;font-family:var(--mono);font-size:.7rem;letter-spacing:.16em;color:var(--muted);margin-bottom:clamp(1.8rem,4vw,2.8rem);text-transform:uppercase}
+.dark .sec-top{color:rgba(243,240,231,.85)}
+.sec-top .rule{flex:1;height:1px;background:var(--line);min-width:2rem}
+.sec-top .hint{color:var(--accent)}
+.sec-title{font-family:var(--serif);font-weight:500;font-size:clamp(2.1rem,4.8vw,4rem);line-height:1.04;letter-spacing:-.02em;margin-bottom:clamp(2rem,5vw,3.4rem);max-width:22ch}
+.sec-title em{font-style:italic;font-weight:400;color:var(--accent)}
+.sec-title .w,.foot-title .w{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.18em;margin-bottom:-.18em;padding-right:.06em;margin-right:-.06em}
+.sec-title .wi,.foot-title .wi{display:inline-block;will-change:transform}
+
+/* ============ LOADER ============ */
+#loader{position:fixed;inset:0;background:#161309;color:#F3F0E7;z-index:200;display:grid;place-items:center;cursor:pointer}
+#loader.done{transform:translateY(-101%);transition:transform .8s var(--ease) .1s}
+html:not(.js) #loader{display:none}
+.loader-box{width:min(440px,84vw);font-family:var(--mono);font-size:.72rem;letter-spacing:.06em}
+.loader-log{min-height:8.2em}
+.loader-log div{margin-bottom:.5em;opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.loader-log b{color:#FF5A28;font-weight:500}
+.loader-bar{height:2px;background:rgba(243,240,231,.15);margin:1.3rem 0 .7rem}
+.loader-bar i{display:block;height:100%;width:0;background:#FF5A28}
+.loader-pct{display:flex;justify-content:space-between;color:rgba(243,240,231,.45)}
+
+/* ============ CURSOR / PROGRESS / GRAIN ============ */
+.cursor-dot,.cursor-ring{position:fixed;top:0;left:0;pointer-events:none;z-index:120;border-radius:50%;opacity:0;transition:opacity .3s;will-change:transform}
+html.cursor-on .cursor-dot,html.cursor-on .cursor-ring{opacity:1}
+html.cursor-on,html.cursor-on *{cursor:none!important}
+.cursor-dot{width:7px;height:7px;margin:-3.5px 0 0 -3.5px;background:var(--accent)}
+.cursor-ring{width:34px;height:34px;margin:-17px 0 0 -17px;border:1px solid rgba(217,72,28,.65);transition:width .35s var(--ease),height .35s var(--ease),margin .35s var(--ease),opacity .3s,background .35s}
+html.cursor-hover .cursor-ring{width:58px;height:58px;margin:-29px 0 0 -29px;background:rgba(217,72,28,.08)}
+#progress{position:fixed;top:0;left:0;height:2px;width:0;background:var(--accent);z-index:85}
+.grain{position:fixed;inset:-60%;width:220%;height:220%;pointer-events:none;z-index:100;opacity:.05;background-image:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");animation:grain 9s steps(6) infinite}
+@keyframes grain{0%,100%{transform:translate(0,0)}20%{transform:translate(-2%,2%)}40%{transform:translate(2%,-1%)}60%{transform:translate(-1%,-2%)}80%{transform:translate(1%,2%)}}
+
+/* ============ TOOLTIP / TOAST ============ */
+#tip{position:fixed;top:0;left:0;z-index:95;pointer-events:none;background:#191611;color:#F3F0E7;font-family:var(--mono);font-size:.68rem;letter-spacing:.04em;padding:.55rem .8rem;opacity:0;transition:opacity .18s;max-width:300px;line-height:1.5}
+#tip.on{opacity:1}
+#tip b{color:#FF5A28;font-weight:500}
+#toast{position:fixed;left:50%;bottom:2rem;transform:translate(-50%,150%);background:#191611;color:#F3F0E7;padding:.9rem 1.4rem;font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;z-index:90;transition:transform .55s var(--ease);border-left:3px solid #FF5A28;display:flex;gap:.7rem;align-items:center;max-width:92vw}
+#toast.show{transform:translate(-50%,0)}
+#toast svg{color:#FF5A28;flex:none}
+
+/* ============ NAV ============ */
+#nav{position:fixed;top:0;left:0;right:0;z-index:70;border-bottom:1px solid transparent}
+#nav.scrolled{background:rgba(243,240,237,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom-color:var(--line)}
+body.lock #nav{--fg:#F3F0E7;--bg:#161309;--muted:rgba(243,240,231,.74);border-bottom-color:transparent;background:none}
+.nav-in{max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;padding:1.05rem clamp(1.25rem,4vw,4rem)}
+.brand{display:flex;align-items:baseline;gap:.9rem;text-decoration:none;color:var(--fg)}
+.brand-m{font-family:var(--serif);font-style:italic;font-weight:500;font-size:1.45rem;letter-spacing:-.02em}
+.brand-m .x{color:var(--accent);font-style:normal}
+.brand-t{color:var(--muted);font-family:var(--mono);font-size:.62rem;letter-spacing:.18em}
+.nav-links{display:flex;gap:2.2rem}
+.nav-link{position:relative;text-decoration:none;color:var(--muted);font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;transition:color .3s;padding:.3rem 0}
+.nav-link sup{color:var(--accent);font-size:.8em;margin-right:.45em}
+.nav-link::after{content:'';position:absolute;left:0;bottom:0;height:1px;width:100%;background:var(--accent);transform:scaleX(0);transform-origin:right;transition:transform .45s var(--ease)}
+.nav-link:hover,.nav-link.active{color:var(--fg)}
+.nav-link:hover::after,.nav-link.active::after{transform:scaleX(1);transform-origin:left}
+.nav-right{display:flex;align-items:center;gap:1rem}
+#menuBtn{display:none;background:none;border:0;width:38px;height:38px;position:relative;z-index:75;cursor:pointer}
+#menuBtn i{position:absolute;left:8px;right:8px;height:1.5px;background:currentColor;transition:.4s var(--ease)}
+#menuBtn i:nth-child(1){top:15px}#menuBtn i:nth-child(2){top:23px}
+#menuBtn.x i:nth-child(1){top:19px;transform:rotate(45deg)}
+#menuBtn.x i:nth-child(2){top:19px;transform:rotate(-45deg)}
+#menu{position:fixed;inset:0;background:#161309;color:#F3F0E7;z-index:60;display:flex;flex-direction:column;justify-content:center;padding:0 clamp(1.5rem,8vw,5rem);visibility:hidden;opacity:0;transition:opacity .5s var(--ease),visibility .5s}
+#menu.open{visibility:visible;opacity:1}
+#menu nav a{font-family:var(--serif);font-weight:450;font-size:clamp(2rem,8vw,3.6rem);text-decoration:none;padding:.85rem 0;border-bottom:1px solid rgba(243,240,231,.12);display:flex;align-items:baseline;gap:1.3rem;transform:translateY(26px);opacity:0;transition:transform .6s var(--ease),opacity .6s var(--ease),color .3s}
+#menu.open nav a{transform:none;opacity:1}
+#menu.open nav a:nth-child(1){transition-delay:.05s}
+#menu.open nav a:nth-child(2){transition-delay:.1s}
+#menu.open nav a:nth-child(3){transition-delay:.15s}
+#menu.open nav a:nth-child(4){transition-delay:.2s}
+#menu.open nav a:nth-child(5){transition-delay:.25s}
+#menu nav a:hover{color:#FF5A28}
+#menu nav a .mono{color:#FF5A28;font-size:.7rem}
+#menu .menu-foot{margin-top:3rem;color:rgba(243,240,231,.78);font-family:var(--mono);font-size:.68rem;letter-spacing:.1em}
+
+/* ============ BUTTONS ============ */
+.btn{display:inline-flex;align-items:center;gap:.7rem;padding:1rem 1.7rem;border:1px solid var(--fg);font-family:var(--mono);font-size:.68rem;letter-spacing:.16em;text-decoration:none;color:var(--fg);background:transparent;cursor:pointer;transition:background .35s var(--ease),color .35s,border-color .35s}
+.btn svg{transition:transform .35s var(--ease)}
+.btn:hover{background:var(--accent);border-color:var(--accent);color:#F3F0E7}
+.btn:hover svg{transform:translateY(3px)}
+.btn-ink{background:var(--fg);color:var(--bg)}
+.btn-ink:hover{background:var(--accent);color:#F3F0E7}
+.magnet{transition:transform .45s var(--ease),background .35s var(--ease),color .35s,border-color .35s;will-change:transform}
+
+/* ============ HERO ============ */
+.hero{position:relative;min-height:100svh;display:flex;flex-direction:column;padding:7.2rem clamp(1.25rem,4vw,4rem) 4.5rem;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(25,22,17,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(25,22,17,.05) 1px,transparent 1px);background-size:78px 78px;-webkit-mask-image:linear-gradient(#000 62%,transparent);mask-image:linear-gradient(#000 62%,transparent);pointer-events:none}
+.hero .wrap{position:relative;width:100%;display:flex;flex-direction:column;flex:1}
+.hero-mm{position:absolute;right:-4%;top:2%;font-family:var(--serif);font-style:italic;font-weight:500;font-size:min(38vw,34rem);line-height:1;color:rgba(25,22,17,.035);-webkit-text-stroke:1.5px rgba(25,22,17,.13);pointer-events:none;user-select:none;z-index:0;will-change:transform}
+.hero-meta{position:relative;z-index:1;display:flex;justify-content:space-between;gap:1rem;color:var(--muted);border-bottom:1px solid var(--line);padding-bottom:1.1rem;flex-wrap:wrap}
+.avail{display:inline-flex;align-items:center;gap:.65rem;color:var(--fg)}
+.avail i{width:8px;height:8px;border-radius:50%;background:var(--accent);position:relative;flex:none}
+.avail i::after{content:'';position:absolute;inset:0;border-radius:50%;border:1px solid var(--accent);animation:ping 2.2s var(--ease) infinite}
+@keyframes ping{0%{transform:scale(1);opacity:.9}100%{transform:scale(3.2);opacity:0}}
+.hero-title{position:relative;z-index:1;margin-top:clamp(2rem,6vh,4.5rem)}
+.rl{display:block;overflow:hidden}
+html.js .rl-in{display:inline-block;transform:translateY(115%);transition:transform 1.05s var(--ease)}
+html.js body.loaded .rl-in{transform:none}
+.hero-name{font-family:var(--serif);font-weight:460;font-size:clamp(1.7rem,8.4vw,9.5rem);line-height:.96;letter-spacing:-.02em;text-transform:uppercase;white-space:nowrap}
+.hero-name .ltr{display:inline-block;will-change:transform;transition:font-weight .5s var(--ease),color .3s ease}
+.hero-name .ltr:hover{font-weight:650;color:var(--accent)}
+.hero-k{display:flex;align-items:baseline;gap:clamp(1rem,3vw,2rem);margin-top:.4rem;flex-wrap:wrap}
+.k-big{font-family:var(--serif);font-style:italic;font-weight:450;font-size:clamp(2.4rem,9vw,9.5rem);line-height:.9;color:var(--accent)}
+.k-tag{font-family:var(--serif);font-style:italic;font-weight:400;font-size:clamp(1.25rem,3vw,2.3rem);color:var(--soft)}
+.hero-type{position:relative;z-index:1;margin-top:clamp(1.6rem,4vh,3rem);font-size:.78rem;letter-spacing:.14em;color:var(--muted);min-height:1.5em;display:flex;align-items:center;gap:.8rem}
+.hero-type .prompt{color:var(--accent)}
+#type{color:var(--fg)}
+.caret{display:inline-block;width:.6em;height:1.05em;background:var(--accent);animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.hero-foot{position:relative;z-index:1;display:grid;grid-template-columns:1.2fr .8fr;gap:clamp(2rem,5vw,5rem);align-items:end;margin-top:auto;padding-top:clamp(2.5rem,6vh,4rem)}
+.hero-blurb p{max-width:46ch;color:var(--soft);font-size:1.02rem}
+.hero-blurb b{color:var(--fg);font-weight:600}
+.hero-cta{display:flex;gap:1rem;margin-top:1.8rem;flex-wrap:wrap}
+.spec-card{border:1px solid var(--line);background:rgba(243,240,231,.72);backdrop-filter:blur(4px)}
+.spec-head{display:flex;justify-content:space-between;gap:1rem;padding:.85rem 1.2rem;border-bottom:1px solid var(--line);color:var(--muted)}
+.spec-head b{color:var(--accent);font-weight:500}
+.spec-card dl{padding:.6rem 1.2rem 1rem}
+.spec-card dl>div{display:flex;justify-content:space-between;gap:1rem;padding:.55rem 0;border-bottom:1px dotted var(--line);font-family:var(--mono);font-size:.66rem;letter-spacing:.08em}
+.spec-card dl>div:last-child{border-bottom:0}
+.spec-card dt{color:var(--muted)}
+.spec-card dd{color:var(--fg);text-align:right}
+.spec-card .ok{display:inline-flex;align-items:center;gap:.5rem;color:var(--accent)}
+.spec-card .ok i{width:6px;height:6px;border-radius:50%;background:var(--accent)}
+html.js .hfade{opacity:0;transform:translateY(18px);transition:opacity .9s var(--ease),transform .9s var(--ease);transition-delay:var(--d,0s)}
+html.js body.loaded .hfade{opacity:1;transform:none}
+.scroll-cue{position:absolute;bottom:1.3rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.55rem;color:var(--muted);z-index:1}
+.scroll-cue i{width:1px;height:44px;background:var(--line);position:relative;overflow:hidden}
+.scroll-cue i::after{content:'';position:absolute;left:0;top:-100%;width:100%;height:100%;background:var(--accent);animation:drop 1.8s var(--ease) infinite}
+@keyframes drop{to{top:110%}}
+
+/* ============ TICKER — dependency-free rAF engine (CSS keyframes = no-JS fallback) ============ */
+.ticker{overflow:hidden;background:#191611;color:#F3F0E7}
+.ticker-track{display:flex;width:max-content;animation:tick 30s linear infinite;will-change:transform}
+.ticker:hover .ticker-track{animation-play-state:paused}
+.ticker-group{display:flex;align-items:center;padding:.95rem 0}
+.ticker-group span{font-family:var(--mono);font-size:.7rem;letter-spacing:.22em;white-space:nowrap}
+.ticker-group i{width:6px;height:6px;background:#FF5A28;transform:rotate(45deg);margin:0 1.8rem;flex:none}
+@keyframes tick{to{transform:translateX(-50%)}}
+
+/* ============ PROFILE ============ */
+.profile-grid{display:grid;grid-template-columns:1.25fr .85fr;gap:clamp(2.5rem,6vw,6rem);align-items:start}
+.lede{font-family:var(--serif);font-weight:420;font-size:clamp(1.5rem,2.9vw,2.5rem);line-height:1.18;letter-spacing:-.01em;max-width:24ch}
+.lede em{font-style:italic;color:var(--accent)}
+.body-cols{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:2.4rem}
+.body-cols p{color:var(--soft);font-size:.98rem}
+.orbit-wrap{padding-top:.5rem}
+.orbit{position:relative;width:min(400px,100%);aspect-ratio:1;margin:0 auto}
+.orbit .links{position:absolute;inset:0;width:100%;height:100%}
+.orbit .links line{stroke:rgba(25,22,17,.3);stroke-width:1.4;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 1.2s var(--ease)}
+.orbit .links line:nth-of-type(2){transition-delay:.12s}
+.orbit .links line:nth-of-type(3){transition-delay:.24s}
+.orbit .links line:nth-of-type(4){transition-delay:.36s}
+.orbit.is-in .links line{stroke-dashoffset:0}
+.orbit-core{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:106px;height:106px;border-radius:50%;background:var(--fg);color:var(--paper);font-family:var(--serif);font-style:italic;font-weight:500;font-size:2.1rem;border:0;display:grid;place-items:center;z-index:2;cursor:pointer}
+.orbit-ring{position:absolute;left:50%;top:50%;width:136px;height:136px;margin:-68px 0 0 -68px;animation:spin 26s linear infinite;z-index:1;pointer-events:none}
+.orbit-ring circle{fill:none;stroke:var(--accent);stroke-width:1;stroke-dasharray:3 8}
+@keyframes spin{to{transform:rotate(360deg)}}
+.orbit-node{position:absolute;width:60px;height:60px;border-radius:50%;border:1px solid rgba(25,22,17,.4);background:var(--paper);font-family:var(--mono);font-size:.82rem;letter-spacing:.05em;transform:translate(-50%,-50%);cursor:pointer;transition:background .35s var(--ease),border-color .35s,color .35s,transform .35s var(--ease);z-index:2;will-change:transform}
+.orbit-node:hover,.orbit-node.on{background:var(--accent);border-color:var(--accent);color:#F3F0E7}
+.orbit-caption{margin-top:1.8rem;min-height:4.2em;text-align:center;color:var(--soft);font-size:.92rem;max-width:44ch;margin-inline:auto}
+.orbit-caption.swap{animation:capIn .5s var(--ease)}
+@keyframes capIn{from{opacity:0;transform:translateY(10px)}}
+.orbit-mono{display:block;text-align:center;margin-top:1.4rem;color:var(--muted)}
+.stats{display:flex;flex-wrap:wrap;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:clamp(3rem,7vw,5.5rem)}
+.stat{flex:1 1 auto;min-width:200px;padding:2.1rem 2.2rem 2.1rem 0;margin-right:2.2rem;border-right:1px solid var(--line)}
+.stat:last-child{border-right:0;margin-right:0;padding-right:0}
+.stat-n{font-family:var(--serif);font-weight:500;font-size:clamp(2.5rem,4.4vw,3.9rem);line-height:1;letter-spacing:-.02em}
+.stat-suf{color:var(--accent);font-size:.55em;vertical-align:.45em;margin-left:.1em}
+.stat p{margin-top:.8rem;color:var(--muted)}
+
+/* ============ EXPERTISE ACCORDION ============ */
+.acc-all{background:none;border:1px solid var(--line);color:var(--muted);padding:.45rem .95rem;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;transition:border-color .3s,color .3s}
+.acc-all:hover{border-color:var(--accent);color:var(--accent)}
+.acc-list{border-bottom:1px solid var(--line)}
+.acc-head{display:grid;grid-template-columns:3.4rem 1fr auto auto 2.2rem;align-items:center;gap:1.2rem;width:100%;text-align:left;background:none;border:0;border-top:1px solid var(--line);padding:1.6rem .6rem;cursor:pointer;transition:background .4s var(--ease),color .4s,padding .4s var(--ease)}
+.acc-head:hover,.acc.open .acc-head{background:var(--fg);color:var(--paper);padding-left:1.2rem}
+.acc-idx{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;color:var(--muted);transition:color .3s}
+.acc-head:hover .acc-idx,.acc.open .acc-idx{color:var(--accent)}
+.acc-name{font-family:var(--serif);font-weight:500;font-size:clamp(1.35rem,2.6vw,2rem);letter-spacing:-.01em;line-height:1.1}
+.acc-tag{font-family:var(--serif);font-style:italic;font-size:.95rem;color:var(--muted);transition:color .3s}
+.acc-head:hover .acc-tag,.acc.open .acc-tag{color:rgba(243,240,231,.72)}
+.acc-count{font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;color:var(--muted)}
+.acc-x{position:relative;width:14px;height:14px;justify-self:end;transition:transform .45s var(--ease)}
+.acc-x i{position:absolute;left:50%;top:50%;background:currentColor}
+.acc-x i:first-child{width:14px;height:1.5px;transform:translate(-50%,-50%)}
+.acc-x i:last-child{width:1.5px;height:14px;transform:translate(-50%,-50%)}
+.acc.open .acc-x{transform:rotate(45deg)}
+.acc-body{height:0;overflow:hidden}
+html:not(.gsap) .acc-body{transition:height .55s var(--ease)}
+html:not(.js) .acc-body{height:auto}
+.acc-body-in>div{padding:1.9rem .6rem 2.4rem calc(3.4rem + 1.8rem)}
+.acc-body p{max-width:64ch;color:var(--soft)}
+.chips{display:flex;flex-wrap:wrap;gap:.55rem;margin-top:1.5rem}
+.chip{display:inline-block;padding:.44rem .85rem;border:1px solid var(--line);font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;transition:border-color .3s,color .3s,background .3s}
+.chip:hover{border-color:var(--accent);color:var(--accent)}
+.tc-hint{border-bottom:1px dashed currentColor;font-family:var(--mono);font-size:.85em;letter-spacing:.03em;cursor:help}
+
+/* ============ P2P PROCESS (dark) — auto carousel ============ */
+#process{position:relative;overflow:hidden}
+#process::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(243,240,231,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(243,240,231,.05) 1px,transparent 1px);background-size:78px 78px;pointer-events:none}
+#process .wrap{position:relative}
+.p2p{margin-top:clamp(2.5rem,6vw,4rem)}
+.p2p-note{display:flex;justify-content:flex-end;color:var(--muted);margin-bottom:2.2rem}
+.p2p-steps{display:flex;justify-content:space-between;position:relative}
+.p2p-line{position:absolute;top:31px;left:32px;right:32px;height:2px;background:rgba(243,240,231,.22)}
+.p2p-line::before{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(90deg,transparent 0 10px,rgba(243,240,231,.34) 10px 20px);animation:march 1.1s linear infinite}
+@keyframes march{to{background-position:20px 0}}
+.p2p-fill{position:absolute;left:0;top:0;width:var(--fill,0%);height:100%;background:var(--accent);transition:width .8s var(--ease),height .8s var(--ease)}
+.p2p-step{display:flex;flex-direction:column;align-items:center;gap:1rem;background:none;border:0;cursor:pointer;position:relative;z-index:1;width:128px;padding:0}
+.p2p-dot{position:relative;width:62px;height:62px;border-radius:50%;border:1px solid rgba(243,240,231,.4);display:grid;place-items:center;font-family:var(--mono);font-size:.7rem;letter-spacing:.03em;background:var(--bg);transition:background .4s var(--ease),border-color .4s,color .4s,transform .4s var(--ease);will-change:transform}
+.p2p-step:hover .p2p-dot{border-color:#F3F0E7;transform:translateY(-3px)}
+.p2p-step.is-done .p2p-dot{background:rgba(243,240,231,.2);border-color:rgba(243,240,231,.5)}
+.p2p-step.is-active .p2p-dot{background:var(--accent);border-color:var(--accent);color:#161309;font-weight:500;animation:dotPop .55s var(--ease)}
+@keyframes dotPop{0%{transform:scale(.78)}60%{transform:scale(1.07)}100%{transform:scale(1)}}
+.p2p-dot .ring{position:absolute;left:50%;top:50%;width:70px;height:70px;margin:-35px 0 0 -35px;transform:rotate(-90deg);pointer-events:none}
+.p2p-dot .ring circle{fill:none;stroke:rgba(243,240,231,.2);stroke-width:2}
+.p2p-step.is-active .ring circle{stroke:var(--accent);stroke-dasharray:207.35;stroke-dashoffset:207.35}
+.p2p-step.is-done .ring{opacity:.35}
+.p2p-lab{text-align:center}
+.s-idx{display:block;font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;color:var(--muted);margin-bottom:.3rem}
+.s-name{font-size:.85rem;color:var(--soft);transition:color .3s}
+.p2p-step.is-active .s-name{color:var(--fg)}
+.p2p-detail{margin-top:clamp(2.8rem,6vw,4.2rem);border:1px solid var(--line);position:relative}
+.p2p-progress{position:absolute;top:0;left:0;right:0;height:2px;background:rgba(243,240,231,.18);z-index:2}
+.p2p-progress i{display:block;height:100%;width:0;background:var(--accent)}
+.p2p-inner{display:grid;grid-template-columns:auto 1.15fr .85fr;gap:clamp(1.6rem,4vw,3.5rem);padding:clamp(1.8rem,4.5vw,3.2rem)}
+.p2p-inner.swap .pd-anim{animation:pdIn .6s var(--ease) both}
+.p2p-inner.swap .pd-anim:nth-child(2){animation-delay:.07s}
+.p2p-inner.swap .pd-anim:nth-child(3){animation-delay:.14s}
+@keyframes pdIn{from{opacity:0;transform:translateY(14px)}}
+.p2p-inner.swap .chip{animation:chipIn .45s var(--ease) both}
+@keyframes chipIn{from{opacity:0;transform:translateY(10px)}}
+.pd-anim{will-change:transform,opacity}
+.pd-idx{font-family:var(--serif);font-weight:500;font-size:clamp(3rem,6vw,5rem);line-height:.85;color:var(--accent)}
+@supports (-webkit-text-stroke:1px black){.pd-idx{color:transparent;-webkit-text-stroke:1.2px var(--accent)}}
+.pd-title{font-family:var(--serif);font-weight:500;font-size:clamp(1.5rem,2.8vw,2.2rem);letter-spacing:-.01em}
+.pd-desc{margin-top:1.1rem;color:var(--soft);max-width:52ch}
+.pd-label{display:block;color:var(--muted);margin-bottom:1.1rem}
+.pd-chips{display:flex;flex-wrap:wrap;gap:.55rem;align-content:flex-start}
+.p2p-nav{border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;padding:1.1rem clamp(1.8rem,4.5vw,3.2rem);gap:1rem;flex-wrap:wrap}
+.p2p-status{display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.p2p-nav .mono{color:var(--muted)}
+.auto-pill{display:inline-flex;align-items:center;gap:.55rem;border:1px solid rgba(255,90,40,.55);color:var(--accent);padding:.42rem .85rem;border-radius:2rem;font-family:var(--mono);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase}
+.auto-pill i{width:6px;height:6px;border-radius:50%;background:currentColor;animation:blink 1.2s steps(1) infinite}
+.auto-pill.paused{border-color:var(--line);color:var(--muted)}
+.auto-pill.paused i{animation:none}
+.p2p-ctrl{display:flex;align-items:center;gap:.7rem}
+#p2pPlay{display:inline-flex;align-items:center;gap:.55rem;background:none;border:1px solid var(--line);color:var(--fg);padding:.62rem 1.05rem;border-radius:2rem;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;cursor:pointer;transition:border-color .3s,color .3s}
+#p2pPlay:hover{border-color:var(--accent);color:var(--accent)}
+#p2pPlay .ic-play{display:none}
+#p2pPlay.paused .ic-play{display:block}
+#p2pPlay.paused .ic-pause{display:none}
+.p2p-arrows{display:flex;gap:.7rem}
+.p2p-arrows button{width:46px;height:46px;border-radius:50%;border:1px solid var(--line);background:none;display:grid;place-items:center;cursor:pointer;transition:border-color .3s,background .3s,color .3s}
+.p2p-arrows button:hover{border-color:var(--accent);background:var(--accent);color:#161309}
+
+/* ============ EXPERIENCE ============ */
+.exp-grid{display:grid;grid-template-columns:.85fr 1.55fr;gap:clamp(2.5rem,6vw,5.5rem)}
+.exp-side{position:sticky;top:110px;align-self:start}
+.side-co{color:var(--accent);margin-bottom:.9rem}
+.side-name{font-family:var(--serif);font-weight:500;font-size:clamp(1.9rem,3vw,2.6rem);line-height:1.05;letter-spacing:-.015em}
+.side-meta{margin-top:1.1rem;color:var(--soft);font-size:.95rem}
+.side-track{list-style:none;margin-top:2.2rem;border-left:1px solid var(--line)}
+.side-track li{position:relative;padding:.55rem 0 .55rem 1.5rem;color:var(--muted);font-size:.66rem}
+.side-track li::before{content:'';position:absolute;left:-4.5px;top:1.05em;width:8px;height:8px;background:var(--paper);border:1px solid var(--muted);border-radius:50%}
+.side-track li.now{color:var(--fg)}
+.side-track li.now::before{background:var(--accent);border-color:var(--accent)}
+.side-link{display:inline-flex;align-items:center;gap:.55rem;margin-top:2rem;text-decoration:none;color:var(--fg);border-bottom:1px solid var(--accent);padding-bottom:.3rem;transition:color .3s}
+.side-link:hover{color:var(--accent)}
+.role{padding-left:clamp(1.4rem,3vw,2.2rem);border-left:1px solid var(--line);position:relative;margin-bottom:clamp(3rem,6vw,4.5rem)}
+.role:last-child{margin-bottom:0}
+.role::before{content:'';position:absolute;left:-5px;top:.4em;width:9px;height:9px;background:var(--accent);transform:rotate(45deg)}
+.role-date{color:var(--accent);margin-bottom:.7rem;display:block}
+.role h4{font-family:var(--serif);font-weight:500;font-size:clamp(1.4rem,2.4vw,1.9rem);letter-spacing:-.01em}
+.bullets{list-style:none;margin-top:1.4rem;display:grid;gap:1rem}
+.bullets li{position:relative;padding-left:1.7rem;color:var(--soft);max-width:74ch}
+.bullets li::before{content:'';position:absolute;left:0;top:.68em;width:1rem;height:1px;background:var(--accent)}
+.bullets b{color:var(--fg);font-weight:600}
+.tc{font-family:var(--mono);font-size:.86em;letter-spacing:.02em}
+
+/* ============ PROJECTS ============ */
+.proj{display:grid;grid-template-columns:1.7fr .65fr;gap:clamp(2rem,5vw,4rem);padding-top:2.2rem;border-top:2px solid var(--fg);margin-bottom:clamp(3.5rem,7vw,5.5rem)}
+.proj-b{margin-left:clamp(0rem,7vw,6rem)}
+.proj-top{display:flex;justify-content:space-between;gap:1rem;color:var(--muted)}
+.proj-top span:first-child{color:var(--accent)}
+.proj-name{font-family:var(--serif);font-weight:500;font-size:clamp(1.8rem,3.4vw,2.9rem);letter-spacing:-.015em;margin-top:1rem;line-height:1.05}
+.proj-sub{color:var(--accent);margin:1rem 0 1.9rem;font-size:.68rem}
+.proj .bullets{margin-top:0}
+.fact{border-top:1px solid var(--line);padding:1.2rem 0}
+.fact:first-child{border-top:0}
+.fact-n{display:block;font-family:var(--serif);font-weight:500;font-size:clamp(1.5rem,2.4vw,2rem);line-height:1.1;letter-spacing:-.01em}
+.fact .mono{display:block;margin-top:.5rem;color:var(--muted)}
+
+/* ============ SKILLS / EDUCATION ============ */
+.skill-row{display:grid;grid-template-columns:minmax(190px,.34fr) 1fr;gap:clamp(1.2rem,3vw,2.5rem);padding:1.7rem 0;border-top:1px solid var(--line)}
+.skills{border-bottom:1px solid var(--line)}
+.skill-cat{display:flex;align-items:center;gap:.7rem;color:var(--fg);font-size:.7rem}
+.skill-cat::before{content:'';width:8px;height:8px;background:var(--accent);transform:rotate(45deg);flex:none}
+.skill-terms{line-height:2.15;color:var(--soft);font-size:.94rem}
+.term{cursor:default}
+.sep{color:var(--muted);margin:0 .6rem;opacity:.55}
+.edu{display:grid;grid-template-columns:auto 1fr;gap:clamp(2rem,5vw,4rem);align-items:center;border:1px solid var(--line);padding:clamp(1.6rem,4vw,2.6rem);margin-top:clamp(3rem,7vw,5rem);position:relative}
+.edu::before,.edu::after{content:'+';position:absolute;font-family:var(--mono);color:var(--accent);font-size:.85rem;line-height:1}
+.edu::before{top:-.5em;left:-.35em}
+.edu::after{bottom:-.5em;right:-.35em}
+.edu-score b{display:block;font-family:var(--serif);font-weight:500;font-size:clamp(3rem,6vw,4.6rem);line-height:.9;letter-spacing:-.02em}
+.edu-score span{display:block;margin-top:.6rem;color:var(--muted)}
+.edu-tag{color:var(--accent);margin-bottom:.8rem}
+.edu-info h3{font-family:var(--serif);font-weight:500;font-size:clamp(1.4rem,2.4vw,1.9rem)}
+.edu-date{margin-top:.7rem;color:var(--muted)}
+
+/* ============ CONTACT / FOOTER ============ */
+footer{position:relative;overflow:hidden}
+.foot-top{display:flex;justify-content:space-between;gap:1rem;color:rgba(243,240,231,.85);padding-top:clamp(4.5rem,9vw,8rem);flex-wrap:wrap}
+.foot-top .accent{color:var(--accent)}
+.foot-title{font-family:var(--serif);font-weight:500;font-size:clamp(1.9rem,4.4vw,3.4rem);line-height:1.1;letter-spacing:-.015em;max-width:22ch;margin:2.2rem 0 3rem;color:#F3F0E7}
+.foot-title em{font-style:italic;font-weight:400;color:var(--accent)}
+.contact-cta{display:flex;justify-content:space-between;align-items:center;gap:clamp(1.2rem,3vw,2.5rem);border:1px solid var(--line);background:rgba(243,240,231,.04);padding:clamp(1.5rem,3.5vw,2.6rem);flex-wrap:wrap;position:relative}
+.contact-cta::before{content:'';position:absolute;top:-1px;left:-1px;width:64px;height:1px;background:var(--accent)}
+.cta-main{display:flex;flex-direction:column;gap:.85rem;min-width:min(100%,300px)}
+.cta-label{display:flex;align-items:center;gap:.6rem;color:var(--accent)}
+.cta-label svg{flex:none}
+.mail-link{font-family:var(--serif);font-weight:500;font-size:clamp(1.3rem,3.8vw,2.7rem);letter-spacing:-.015em;line-height:1.18;color:#F3F0E7;text-decoration:none;overflow-wrap:anywhere;transition:color .3s}
+.mail-link:hover{color:var(--accent)}
+.cta-note{color:rgba(243,240,231,.8);display:inline-flex;align-items:center;gap:.55rem}
+.cta-note i{width:6px;height:6px;border-radius:50%;background:var(--accent);flex:none}
+.copy-btn{width:60px;height:60px;border-radius:50%;border:1px solid var(--line);background:none;display:grid;place-items:center;cursor:pointer;flex:none;color:#F3F0E7;transition:border-color .3s,color .3s,background .3s}
+.copy-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(255,90,40,.06)}
+.contact-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:1rem}
+.c-tile{border:1px solid var(--line);background:rgba(243,240,231,.04);padding:1.5rem 1.4rem 1.3rem;display:flex;flex-direction:column;gap:.9rem;min-height:172px;transition:border-color .35s,transform .35s var(--ease),background .35s}
+.c-tile:hover{border-color:rgba(255,90,40,.6);transform:translateY(-4px);background:rgba(243,240,231,.07)}
+.c-label{display:flex;align-items:center;gap:.6rem;color:rgba(243,240,231,.92);font-size:.62rem}
+.c-label svg{color:var(--accent);flex:none}
+.c-val{font-family:var(--serif);font-weight:500;font-size:clamp(1.15rem,1.8vw,1.45rem);letter-spacing:-.01em;color:#F3F0E7;text-decoration:none;line-height:1.3;transition:color .3s}
+a.c-val:hover{color:var(--accent)}
+.c-sub{margin-top:auto;color:rgba(243,240,231,.78);font-size:.6rem}
+.foot-giant{font-family:var(--serif);font-weight:500;font-size:clamp(3rem,12.5vw,12.5rem);line-height:.78;text-transform:uppercase;letter-spacing:-.02em;text-align:center;color:rgba(243,240,231,.07);white-space:nowrap;user-select:none;margin:clamp(3rem,8vw,6rem) 0 -1.2vw;pointer-events:none;will-change:transform}
+@supports (-webkit-text-stroke:1px black){.foot-giant{color:transparent;-webkit-text-stroke:1px rgba(243,240,231,.22)}}
+.foot-bar{position:relative;z-index:1;background:#161309;border-top:1px solid rgba(243,240,231,.14);display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:1.4rem clamp(1.25rem,4vw,4rem);flex-wrap:wrap}
+.foot-bar .mono{color:rgba(243,240,231,.85)}
+#toTop{background:none;border:0;cursor:pointer;display:inline-flex;align-items:center;gap:.6rem;color:rgba(243,240,231,.85);font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;transition:color .3s}
+#toTop:hover{color:var(--accent)}
+footer .wrap{padding:0 clamp(1.25rem,4vw,4rem) clamp(2rem,4vw,3rem)}
+
+/* ============ FALLBACK REVEALS (no-GSAP engine) ============ */
+html.js [data-reveal]{opacity:0;transform:translateY(26px);transition:opacity .85s var(--ease),transform .85s var(--ease)}
+html.js [data-reveal].is-in{opacity:1;transform:none}
+html.js [data-stagger]>*{opacity:0;transform:translateY(20px);transition:opacity .7s var(--ease),transform .7s var(--ease);transition-delay:var(--d,0ms)}
+html.js [data-stagger].is-in>*{opacity:1;transform:none}
+
+/* ============ GSAP ENGINE OVERRIDES ============ */
+html.gsap [data-reveal],html.gsap [data-stagger]>*,html.gsap .hfade,html.gsap .rl-in{opacity:1!important;transform:none!important;transition:none!important}
+html.gsap .magnet{transition:background .35s var(--ease),color .35s,border-color .35s}
+html.gsap #nav{transition:background .4s,border-color .4s}
+html:not(.gsap) #nav{transition:transform .45s var(--ease),background .4s,border-color .4s}
+html.gsap .orbit-node{transition:background .35s var(--ease),border-color .35s,color .35s}
+
+/* ============ RESPONSIVE ============ */
+@media(max-width:1000px){
+  .acc-tag{display:none}
+  .profile-grid{grid-template-columns:1fr}
+  .orbit-wrap{max-width:480px;margin:0 auto}
+  .exp-grid{grid-template-columns:1fr}
+  .exp-side{position:static}
+  .p2p-inner{grid-template-columns:1fr}
+  .pd-idx{font-size:2.6rem}
+  .contact-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:760px){
+  .nav-links{display:none}
+  #menuBtn{display:block}
+  .nav-right .btn{padding:.75rem 1.1rem}
+  .body-cols{grid-template-columns:1fr}
+  .hero-foot{grid-template-columns:1fr}
+  .spec-card{max-width:440px}
+  .skill-row{grid-template-columns:1fr;gap:.8rem}
+  .edu{grid-template-columns:1fr;gap:1.6rem}
+  .p2p-steps{flex-direction:column;gap:1rem;align-items:stretch}
+  .p2p-step{flex-direction:row;width:100%;gap:1.2rem;align-items:center}
+  .p2p-lab{text-align:left;display:flex;align-items:baseline;gap:.9rem}
+  .p2p-line{left:30.5px;top:31px;bottom:31px;right:auto;width:2px;height:auto}
+  .p2p-line::before{background-image:repeating-linear-gradient(180deg,transparent 0 10px,rgba(243,240,231,.34) 10px 20px)}
+  .p2p-fill{width:100%;height:var(--fill,0%)}
+  .proj{grid-template-columns:1fr}
+  .proj-b{margin-left:0}
+  .stat{border-right:0;margin-right:0;padding-right:0;border-bottom:1px solid var(--line)}
+  .stat:last-child{border-bottom:0}
+  .contact-grid{grid-template-columns:1fr}
+  .contact-cta{flex-direction:column;align-items:flex-start}
+}
+@media(max-width:560px){
+  .acc-count{display:none}
+  .acc-head{grid-template-columns:2.4rem 1fr 2rem;gap:.8rem}
+  .acc-body-in>div{padding:1.6rem .4rem 2rem 1rem}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001s!important;animation-iteration-count:1!important;transition-duration:.001s!important}
+  html{scroll-behavior:auto}
+  html.js [data-reveal],html.js [data-stagger]>*,html.js .hfade,html.js .rl-in{opacity:1!important;transform:none!important}
+}
+</style>
+</head>
+<body class="loading">
+
+<!-- BOOT LOADER -->
+<div id="loader" aria-hidden="true">
+  <div class="loader-box">
+    <div class="loader-log"></div>
+    <div class="loader-bar"><i></i></div>
+    <div class="loader-pct"><span>SAP-MM / PROFILE</span><span class="pct">0%</span></div>
+  </div>
+</div>
+
+<!-- If ALL scripts are stripped, force everything visible -->
+<noscript><style>
+[data-reveal],[data-stagger]>*,.hfade,.rl-in{opacity:1!important;transform:none!important}
+.acc-body{height:auto!important}
+#loader{display:none!important}
+</style></noscript>
+
+<!-- SAFETY NET: if the main script ever dies, unlock + reveal everything -->
+<script>
+window.__SK_BOOTED=false;
+setTimeout(function(){
+  if(window.__SK_BOOTED)return;
+  document.documentElement.classList.remove('js','gsap');
+  document.body.classList.remove('loading','lock');
+  document.body.classList.add('loaded');
+  var l=document.getElementById('loader');
+  if(l&&l.parentNode)l.parentNode.removeChild(l);
+},4000);
+</script>
+
+<div class="cursor-dot"></div>
+<div class="cursor-ring"></div>
+<div id="progress"></div>
+<div class="grain" aria-hidden="true"></div>
+<div id="tip" role="tooltip"></div>
+<div id="toast" role="status"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg><span id="toastText"></span></div>
+
+<!-- NAV -->
+<header id="nav">
+  <div class="nav-in">
+    <a class="brand" href="#top"><span class="brand-m">S<span class="x">/</span>K</span><span class="brand-t">SAP MM CONSULTANT</span></a>
+    <nav class="nav-links" aria-label="Primary">
+      <a class="nav-link" href="#profile"><sup>01</sup>PROFILE</a>
+      <a class="nav-link" href="#expertise"><sup>02</sup>EXPERTISE</a>
+      <a class="nav-link" href="#process"><sup>03</sup>PROCESS</a>
+      <a class="nav-link" href="#experience"><sup>04</sup>EXPERIENCE</a>
+      <a class="nav-link" href="#contact"><sup>05</sup>CONTACT</a>
+    </nav>
+    <div class="nav-right">
+      <a class="btn btn-ink magnet" href="#contact">LET'S TALK</a>
+      <button id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false"><i></i><i></i></button>
+    </div>
+  </div>
+</header>
+
+<!-- MOBILE MENU -->
+<div id="menu" class="dark">
+  <nav aria-label="Mobile">
+    <a href="#profile"><span class="mono">01</span>Profile</a>
+    <a href="#expertise"><span class="mono">02</span>Expertise</a>
+    <a href="#process"><span class="mono">03</span>Process</a>
+    <a href="#experience"><span class="mono">04</span>Experience</a>
+    <a href="#contact"><span class="mono">05</span>Contact</a>
+  </nav>
+  <p class="menu-foot">SUNDARAKALATHI1311@GMAIL.COM · +91 94459 79800 · CHENNAI, IN</p>
+</div>
+
+<main>
+<!-- ================= HERO ================= -->
+<section class="hero" id="top">
+  <div class="hero-mm" aria-hidden="true">MM</div>
+  <div class="wrap">
+    <div class="hero-meta mono hfade" style="--d:.15s">
+      <span class="avail"><i></i>OPEN TO SAP MM CONSULTING</span>
+      <span>CHENNAI, IN — 13.0827° N / 80.2707° E</span>
+      <span>LOCAL <span class="js-clock">--:--:--</span> IST</span>
+    </div>
+
+    <div class="hero-title">
+      <h1 class="hero-name rl" id="heroName" aria-label="Sundarakalathi"><span class="rl-in split" style="transition-delay:.2s">SUNDARAKALATHI</span></h1>
+      <div class="hero-k">
+        <span class="rl"><span class="rl-in k-big" style="transition-delay:.34s">K</span></span>
+        <span class="k-tag hfade" style="--d:.55s">— procurement, configured.</span>
+      </div>
+    </div>
+
+    <div class="hero-type mono hfade" style="--d:.65s">
+      <span class="prompt">&gt;_</span><span id="type"></span><span class="caret" aria-hidden="true"></span>
+    </div>
+
+    <div class="hero-foot">
+      <div class="hero-blurb hfade" style="--d:.78s">
+        <p>SAP MM Functional Consultant at <b>Sify Technologies</b>, Chennai — designing, configuring and defending the <b>Procure-to-Pay cycle</b> on <b>ECC 6.0 &amp; S/4HANA</b>, so materials, money and maintenance all agree.</p>
+        <div class="hero-cta">
+          <a class="btn btn-ink magnet" href="#process">SEE THE PROCESS
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v16m0 0l-6-6m6 6l6-6"/></svg></a>
+          <a class="btn magnet" href="#contact">GET IN TOUCH</a>
+        </div>
+      </div>
+
+      <aside class="spec-card hfade" style="--d:.9s" aria-label="Profile at a glance">
+        <div class="spec-head mono">MATERIAL MASTER — <b>CONSULTANT</b></div>
+        <dl>
+          <div><dt>BASIC DATA</dt><dd>SAP MM / P2P</dd></div>
+          <div><dt>PURCHASING</dt><dd>SOURCING · RELEASE</dd></div>
+          <div><dt>MRP</dt><dd>CONSUMPTION-BASED</dd></div>
+          <div><dt>ACCOUNTING</dt><dd>MM-FI · OBYC</dd></div>
+          <div><dt>PLANT</dt><dd>CHEN — SIFY TECH</dd></div>
+          <div><dt>STATUS</dt><dd class="ok"><i></i>ACTIVE · 3+ YRS</dd></div>
+        </dl>
+      </aside>
+    </div>
+  </div>
+  <div class="scroll-cue hfade" style="--d:1.05s"><span class="mono">SCROLL</span><i></i></div>
+</section>
+
+<!-- TICKER — two identical groups hard-coded; rAF engine drives it, CSS keyframes are the zero-JS fallback -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track">
+    <div class="ticker-group">
+      <span>ME21N</span><i></i><span>MIGO</span><i></i><span>MIRO</span><i></i><span>OBYC</span><i></i><span>S/4HANA</span><i></i><span>RELEASE STRATEGY</span><i></i><span>QUOTA ARRANGEMENT</span><i></i><span>SOURCE DETERMINATION</span><i></i><span>BP</span><i></i><span>MATDOC</span><i></i><span>FIORI</span><i></i><span>LSMW</span><i></i><span>MM-FI</span><i></i><span>MM-PM</span><i></i><span>PHYSICAL INVENTORY</span><i></i><span>SPLIT VALUATION</span><i></i><span>GR/IR</span><i></i><span>HYPERCARE</span><i></i><span>MRP</span><i></i><span>SAFETY STOCK</span><i></i>
+    </div>
+    <div class="ticker-group">
+      <span>ME21N</span><i></i><span>MIGO</span><i></i><span>MIRO</span><i></i><span>OBYC</span><i></i><span>S/4HANA</span><i></i><span>RELEASE STRATEGY</span><i></i><span>QUOTA ARRANGEMENT</span><i></i><span>SOURCE DETERMINATION</span><i></i><span>BP</span><i></i><span>MATDOC</span><i></i><span>FIORI</span><i></i><span>LSMW</span><i></i><span>MM-FI</span><i></i><span>MM-PM</span><i></i><span>PHYSICAL INVENTORY</span><i></i><span>SPLIT VALUATION</span><i></i><span>GR/IR</span><i></i><span>HYPERCARE</span><i></i><span>MRP</span><i></i><span>SAFETY STOCK</span><i></i>
+    </div>
+  </div>
+</div>
+
+<!-- ================= 01 PROFILE ================= -->
+<section id="profile" class="sec">
+  <div class="wrap">
+    <div class="sec-top" data-reveal><span>01 / PROFILE</span><span class="rule"></span><span>FUNCTIONAL CONSULTANT</span></div>
+    <div class="profile-grid">
+      <div>
+        <p class="lede" data-reveal>Three years inside the engine room of procurement — implementing, rolling out and supporting <em>SAP MM</em> across ECC 6.0 and S/4HANA.</p>
+        <div class="body-cols" data-stagger>
+          <p>From purchase requisition to invoice verification, I configure the full Procure-to-Pay cycle — material and vendor masters, source determination, release strategies, pricing procedures, and the MM-FI postings that keep stock and ledgers honest.</p>
+          <p>I've lived the whole lifecycle: SAP Activate workshops, AS-IS / TO-BE, gap analysis, SIT and UAT, cutover nights, go-lives and hypercare — for manufacturing and energy-sector clients, coordinating RICEFW work with ABAP and Basis teams.</p>
+        </div>
+      </div>
+      <div class="orbit-wrap">
+        <div class="orbit" data-reveal>
+          <svg class="links" viewBox="0 0 420 420" aria-hidden="true">
+            <line x1="210" y1="210" x2="344" y2="58" pathLength="1"/>
+            <line x1="210" y1="210" x2="64" y2="92" pathLength="1"/>
+            <line x1="210" y1="210" x2="52" y2="346" pathLength="1"/>
+            <line x1="210" y1="210" x2="354" y2="336" pathLength="1"/>
+          </svg>
+          <svg class="orbit-ring" viewBox="0 0 136 136" aria-hidden="true"><circle cx="68" cy="68" r="66"/></svg>
+          <button class="orbit-core" type="button" aria-label="Materials Management module">MM</button>
+          <button class="orbit-node" type="button" style="left:82%;top:14%" data-info="MM-FI · OBYC automatic account determination, GR/IR clearing and tolerance keys — every goods movement lands in the right ledger.">FI</button>
+          <button class="orbit-node" type="button" style="left:15%;top:22%" data-info="MM-PP · MRP plans the materials; production orders pull stock, reservations and dependent demand.">PP</button>
+          <button class="orbit-node" type="button" style="left:12.5%;top:82.5%" data-info="MM-SD · Sales-order-driven procurement, third-party processing and intercompany stock flows.">SD</button>
+          <button class="orbit-node" type="button" style="left:84%;top:80%" data-info="MM-PM · Maintenance work orders raise purchase requisitions for unplanned spare-parts demand.">PM</button>
+        </div>
+        <p class="orbit-caption" id="orbitCaption" data-reveal>Four modules, one material ledger — hover a node to inspect each integration touchpoint.</p>
+        <span class="orbit-mono mono" data-reveal>INTEGRATION MAP — LIVE CONFIGURATION</span>
+      </div>
+    </div>
+
+    <div class="stats" data-stagger>
+      <div class="stat"><div class="stat-n"><span class="stat-num" data-count="3">0</span><span class="stat-suf">+</span></div><p class="mono">YEARS — ECC 6.0 &amp; S/4HANA</p></div>
+      <div class="stat"><div class="stat-n"><span class="stat-num" data-count="5000">0</span><span class="stat-suf">+</span></div><p class="mono">MATERIAL MASTER RECORDS</p></div>
+      <div class="stat"><div class="stat-n"><span class="stat-num" data-count="50">0</span><span class="stat-suf">+</span></div><p class="mono">END USERS THROUGH UAT</p></div>
+      <div class="stat"><div class="stat-n"><span class="stat-num" data-count="30">0</span><span class="stat-suf">%</span></div><p class="mono">FEWER RECURRING P2P ERRORS</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 02 EXPERTISE ================= -->
+<section id="expertise" class="sec" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-top" data-reveal>
+      <span>02 / EXPERTISE</span><span class="rule"></span>
+      <button id="accAll" class="acc-all" type="button">EXPAND ALL</button>
+    </div>
+    <h2 class="sec-title" data-reveal>What I <em>configure</em>.</h2>
+
+    <div class="acc-list" data-stagger>
+      <div class="acc">
+        <button class="acc-head" type="button" aria-expanded="false" aria-controls="acc1">
+          <span class="acc-idx">01</span><span class="acc-name">Procurement</span>
+          <span class="acc-tag">from demand to commitment</span><span class="acc-count">12 TOPICS</span>
+          <span class="acc-x"><i></i><i></i></span>
+        </button>
+        <div class="acc-body" id="acc1"><div class="acc-body-in"><div>
+          <p>Requisitions, quotations and orders — with the sourcing logic (source lists, quota arrangements, info records) and classification-based release strategies that decide who supplies, at what price, and who approves it.</p>
+          <div class="chips"><span class="chip">PR</span><span class="chip">RFQ</span><span class="chip">PO</span><span class="chip">Contracts</span><span class="chip">Scheduling Agreements</span><span class="chip">Info Records</span><span class="chip">Source Lists</span><span class="chip">Source Determination</span><span class="chip">Quota Arrangement</span><span class="chip">Pricing Procedure</span><span class="chip">Release Strategy</span><span class="chip">Vendor Evaluation</span></div>
+        </div></div></div>
+      </div>
+
+      <div class="acc">
+        <button class="acc-head" type="button" aria-expanded="false" aria-controls="acc2">
+          <span class="acc-idx">02</span><span class="acc-name">Inventory &amp; Planning</span>
+          <span class="acc-tag">stock you can trust</span><span class="acc-count">13 TOPICS</span>
+          <span class="acc-x"><i></i><i></i></span>
+        </button>
+        <div class="acc-body" id="acc2"><div class="acc-body-in"><div>
+          <p>Goods movements, stock visibility and planning — physical inventory, batch and shelf-life control, split valuation, Material Ledger, and consumption-based MRP keeping supply honest down to the safety stock.</p>
+          <div class="chips"><span class="chip">MIGO</span><span class="chip">MMBE</span><span class="chip">MB52</span><span class="chip">Physical Inventory</span><span class="chip">Batch Management</span><span class="chip">Batch Determination</span><span class="chip">Shelf Life</span><span class="chip">Split Valuation</span><span class="chip">Material Ledger</span><span class="chip">GR/IR</span><span class="chip">MRP</span><span class="chip">Reorder Point Planning</span><span class="chip">Safety Stock</span></div>
+        </div></div></div>
+      </div>
+
+      <div class="acc">
+        <button class="acc-head" type="button" aria-expanded="false" aria-controls="acc3">
+          <span class="acc-idx">03</span><span class="acc-name">Integration</span>
+          <span class="acc-tag">one movement, many ledgers</span><span class="acc-count">8 TOPICS</span>
+          <span class="acc-x"><i></i><i></i></span>
+        </button>
+        <div class="acc-body" id="acc3"><div class="acc-body-in"><div>
+          <p>Every goods movement posts somewhere. OBYC account determination, GR/IR and tolerance keys keep MM and FI in agreement — while PM, SD and PP feed and consume the pipeline.</p>
+          <div class="chips"><span class="chip">OBYC</span><span class="chip">Automatic Account Determination</span><span class="chip">GR/IR</span><span class="chip">Tolerance Keys</span><span class="chip">MM-FI</span><span class="chip">MM-PM</span><span class="chip">MM-SD</span><span class="chip">MM-PP</span></div>
+        </div></div></div>
+      </div>
+
+      <div class="acc">
+        <button class="acc-head" type="button" aria-expanded="false" aria-controls="acc4">
+          <span class="acc-idx">04</span><span class="acc-name">S/4HANA</span>
+          <span class="acc-tag">BP, MATDOC &amp; the new simplifications</span><span class="acc-count">5 TOPICS</span>
+          <span class="acc-x"><i></i><i></i></span>
+        </button>
+        <div class="acc-body" id="acc4"><div class="acc-body-in"><div>
+          <p>The modern data model: Business Partner replaces vendor masters, MATDOC unifies material documents, and Fiori apps plus Fit-to-Standard workshops shape the rollout.</p>
+          <div class="chips"><span class="chip">Business Partner</span><span class="chip">MATDOC</span><span class="chip">Logistics Simplifications</span><span class="chip">Fiori MM Apps</span><span class="chip">Fit-to-Standard Workshops</span></div>
+        </div></div></div>
+      </div>
+
+      <div class="acc">
+        <button class="acc-head" type="button" aria-expanded="false" aria-controls="acc5">
+          <span class="acc-idx">05</span><span class="acc-name">Implementation &amp; Support</span>
+          <span class="acc-tag">Activate to hypercare</span><span class="acc-count">11 TOPICS</span>
+          <span class="acc-x"><i></i><i></i></span>
+        </button>
+        <div class="acc-body" id="acc5"><div class="acc-body-in"><div>
+          <p>SAP Activate methodology from first workshop to hypercare — AS-IS / TO-BE, gap analysis, configuration workbooks, test cycles, cutover plans and post-go-live support.</p>
+          <div class="chips"><span class="chip">SAP Activate</span><span class="chip">AS-IS / TO-BE</span><span class="chip">Gap Analysis</span><span class="chip">Configuration</span><span class="chip">SIT</span><span class="chip">UAT</span><span class="chip">Cutover</span><span class="chip">Go-Live</span><span class="chip">Hypercare</span><span class="chip">Functional Specs</span><span class="chip">Config Workbooks</span></div>
+        </div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 03 PROCESS (P2P AUTO CAROUSEL) ================= -->
+<section id="process" class="sec dark">
+  <div class="wrap">
+    <div class="sec-top" data-reveal><span>03 / PROCESS</span><span class="rule"></span><span>PROCURE-TO-PAY</span></div>
+    <h2 class="sec-title" data-reveal>Five movements, <em>one clean cycle</em>.</h2>
+
+    <div class="p2p" id="p2p" data-reveal>
+      <div class="p2p-note mono">AUTO-RUNNING CYCLE · 4.2S PER STAGE · CLICK ANY STAGE · SWIPE ON TOUCH</div>
+      <div class="p2p-steps" id="p2pSteps">
+        <div class="p2p-line"><div class="p2p-fill" id="p2pFill"></div></div>
+      </div>
+
+      <div class="p2p-detail">
+        <div class="p2p-progress"><i id="p2pBar"></i></div>
+        <div class="p2p-inner" id="p2pInner">
+          <span class="pd-idx pd-anim" id="pdIdx">01</span>
+          <div class="pd-anim">
+            <h3 class="pd-title" id="pdTitle"></h3>
+            <p class="pd-desc" id="pdDesc"></p>
+          </div>
+          <div class="pd-anim">
+            <span class="pd-label mono">TOUCHPOINTS</span>
+            <div class="pd-chips" id="pdChips"></div>
+          </div>
+        </div>
+        <div class="p2p-nav">
+          <div class="p2p-status">
+            <span class="auto-pill" id="p2pAuto"><i></i><b>AUTO</b></span>
+            <span class="mono" id="p2pCount">01 / 05</span>
+          </div>
+          <div class="p2p-ctrl">
+            <button id="p2pPlay" type="button" aria-label="Pause auto-play" aria-pressed="false">
+              <svg class="ic-pause" width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+              <svg class="ic-play" width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+              <span id="p2pPlayTxt">PAUSE</span>
+            </button>
+            <div class="p2p-arrows">
+              <button id="p2pPrev" type="button" aria-label="Previous stage"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+              <button id="p2pNext" type="button" aria-label="Next stage"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 04 EXPERIENCE ================= -->
+<section id="experience" class="sec">
+  <div class="wrap">
+    <div class="sec-top" data-reveal><span>04 / EXPERIENCE</span><span class="rule"></span><span>2023 → PRESENT</span></div>
+    <h2 class="sec-title" data-reveal>Two roles, one <em>trajectory</em>.</h2>
+
+    <div class="exp-grid">
+      <aside class="exp-side" data-reveal>
+        <p class="mono side-co">EMPLOYER</p>
+        <h3 class="side-name">Sify Technologies</h3>
+        <p class="side-meta">SAP Consulting — Chennai, Tamil Nadu<br>Jul 2023 → Present</p>
+        <ul class="side-track mono">
+          <li class="now">2024 — Functional Consultant</li>
+          <li>2023 — Junior Consultant</li>
+        </ul>
+        <a class="side-link mono" href="https://www.linkedin.com/in/sundarakalathi-k-992b011a1/" target="_blank" rel="noopener">VERIFY ON LINKEDIN
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M8 7h9v9"/></svg></a>
+      </aside>
+
+      <div>
+        <article class="role" data-reveal>
+          <span class="mono role-date">JUL 2024 — PRESENT</span>
+          <h4>SAP MM Functional Consultant</h4>
+          <ul class="bullets" data-stagger>
+            <li>Configured SAP MM across <b>ECC 6.0 and S/4HANA</b>, driving SAP Activate engagements end to end — AS-IS / TO-BE, gap analysis, configuration, <b>SIT, UAT, cutover, go-live and hypercare</b> — for manufacturing and energy-sector clients.</li>
+            <li>Built the organizational backbone — <b>plants, storage locations, purchasing organizations and groups</b> — and maintained <b>5,000+ material master records</b> across Basic Data, Purchasing, MRP, Accounting and Storage views.</li>
+            <li>Owned Vendor Master and the <b>S/4HANA Business Partner</b> concept: account groups, partner functions and vendor-evaluation criteria for supplier management.</li>
+            <li>Configured the full <b>Procure-to-Pay cycle</b> — PR, RFQ, PO, goods receipt and invoice verification — including source determination, quota arrangements, pricing procedures and consumption-based planning.</li>
+            <li>Set up <b>MM-FI integration</b> — OBYC automatic account determination, split valuation, GR/IR and tolerance keys — and coordinated RICEFW changes with ABAP and Basis teams.</li>
+            <li>Ran classification-based <b>release strategies</b> for PRs and POs (<span class="tc">CT04</span> / <span class="tc">CL01</span>), plus physical inventory, Material Ledger reconciliation, functional specifications and configuration workbooks.</li>
+          </ul>
+        </article>
+
+        <article class="role" data-reveal>
+          <span class="mono role-date">JUL 2023 — JUN 2024</span>
+          <h4>SAP MM Junior Consultant</h4>
+          <ul class="bullets" data-stagger>
+            <li>Supported procurement and inventory operations day to day — monitoring purchasing and stock via <span class="tc">ME2M</span>, <span class="tc">MB52</span>, <span class="tc">ME80FN</span> and <span class="tc">MMBE</span>, resolving GR/IR and document discrepancies.</li>
+            <li>Executed <b>unit testing, SIT and UAT</b> for purchase orders, goods movements and invoice verification — logging defects and steering them through test cycles.</li>
+            <li>Configured special procurement — <b>subcontracting, consignment, third-party processing and stock transfer orders</b> — with plant-specific batch determination.</li>
+            <li>Migrated material and vendor masters, initial stock and open documents via <b>LSMW / BDC</b>, validating data across plants and storage locations.</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 05 PROJECTS ================= -->
+<section id="projects" class="sec" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-top" data-reveal><span>05 / SELECTED ENGAGEMENTS</span><span class="rule"></span><span>IN THE FIELD</span></div>
+    <h2 class="sec-title" data-reveal>Rollouts &amp; <em>AMS</em>, shipped.</h2>
+
+    <div class="proj" data-reveal>
+      <div class="proj-main">
+        <div class="proj-top mono"><span>P.01</span><span>2024 — PRESENT</span></div>
+        <h3 class="proj-name">Sembcorp Energy India Ltd.</h3>
+        <p class="proj-sub mono">SAP S/4HANA ROLLOUT · MM-PM INTEGRATION · RENEWABLES</p>
+        <ul class="bullets" data-stagger>
+          <li>Configured the organizational structure for <b>multiple wind turbine and solar PV sites</b>, with material and vendor master setup for spares, consumables, fuel, chemicals and OEM suppliers.</li>
+          <li>Set up info records, source lists, quota arrangements and <b>outline contracts</b> for long-term OEM spare-parts procurement.</li>
+          <li>Integrated <b>MM with Plant Maintenance</b> — PRs generated straight from maintenance work orders for unplanned spare-parts demand.</li>
+          <li>Drove cutover: inventory reconciliation, open-document migration, physical inventory posting, <b>UAT for 50+ end users</b>, plus configuration workbooks and training manuals.</li>
+        </ul>
+      </div>
+      <div class="proj-facts" data-stagger>
+        <div class="fact"><b class="fact-n">Wind + Solar</b><span class="mono">SITE FOOTPRINT</span></div>
+        <div class="fact"><b class="fact-n">50+</b><span class="mono">UAT END USERS</span></div>
+        <div class="fact"><b class="fact-n">MM → PM</b><span class="mono">WORK ORDER TO PR</span></div>
+      </div>
+    </div>
+
+    <div class="proj proj-b" data-reveal>
+      <div class="proj-main">
+        <div class="proj-top mono"><span>P.02</span><span>2023 — 2024</span></div>
+        <h3 class="proj-name">OnMobile Global Limited</h3>
+        <p class="proj-sub mono">SAP ECC 6.0 · AMS SUPPORT · MM-FI INTEGRATION</p>
+        <ul class="bullets" data-stagger>
+          <li>Day-to-day functional support: material master corrections, PO amendments, <span class="tc">MIGO</span> reversals, <span class="tc">MIRO</span> adjustments and vendor evaluation.</li>
+          <li>Resolved OBYC, GR/IR and <span class="tc">MR11</span> integration issues — cutting <b>recurring P2P cycle errors by 30%</b> through root-cause analysis and targeted configuration fixes.</li>
+          <li>Tracked procurement and inventory via <span class="tc">ME2M</span> and <span class="tc">MB51</span>; ran GR/IR reconciliation with Finance for timely resolution.</li>
+          <li>Drove <b>MSME vendor-payment compliance</b> and coordinated overdue invoice escalations with the Finance team.</li>
+        </ul>
+      </div>
+      <div class="proj-facts" data-stagger>
+        <div class="fact"><b class="fact-n">30% ↓</b><span class="mono">RECURRING P2P ERRORS</span></div>
+        <div class="fact"><b class="fact-n">ECC 6.0</b><span class="mono">PLATFORM</span></div>
+        <div class="fact"><b class="fact-n">MM ↔ FI</b><span class="mono">OBYC · GR/IR · MR11</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 06 SKILLS + EDUCATION ================= -->
+<section id="skills" class="sec" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-top" data-reveal><span>06 / CAPABILITIES</span><span class="rule"></span><span class="hint">HOVER ANY T-CODE FOR ITS FUNCTION</span></div>
+    <h2 class="sec-title" data-reveal>The working <em>toolkit</em>.</h2>
+
+    <div class="skills">
+      <div class="skill-row" data-reveal>
+        <h4 class="mono skill-cat">SAP MM</h4>
+        <p class="skill-terms" data-terms="PR|RFQ|PO|Contracts|Scheduling Agreements|Info Records|Source Lists|Source Determination|Quota Arrangement|Release Strategy|Vendor Evaluation|Service Procurement|External Services Management"></p>
+      </div>
+      <div class="skill-row" data-reveal>
+        <h4 class="mono skill-cat">Special Procurement</h4>
+        <p class="skill-terms" data-terms="Subcontracting|Consignment|Third-Party Processing|STO|Inter-Company Stock Transfer"></p>
+      </div>
+      <div class="skill-row" data-reveal>
+        <h4 class="mono skill-cat">Inventory Management</h4>
+        <p class="skill-terms" data-terms="MIGO|MMBE|MB52|MB51|Physical Inventory|Batch Management|Batch Determination|Shelf Life|Split Valuation|Material Ledger|GR/IR|MR11|Tolerance Keys"></p>
+      </div>
+      <div class="skill-row" data-reveal>
+        <h4 class="mono skill-cat">MRP</h4>
+        <p class="skill-terms" data-terms="Consumption-Based Planning|MRP Types PD / VB / VM|Reorder Point Planning|Safety Stock"></p>
+      </div>
+      <div class="skill-row" data-reveal>
+        <h4 class="mono skill-cat">S/4HANA &amp; Migration</h4>
+        <p class="skill-terms" data-terms="BP|MATDOC|SAP Fiori|LSMW|LTMC|BDC|RICEFW"></p>
+      </div>
+      <div class="skill-row" data-reveal>
+        <h4 class="mono skill-cat">Reporting &amp; Tools</h4>
+        <p class="skill-terms" data-terms="ME2M|ME2N|ME80FN|MMBE|MB52|ME5A|MB5T|MR11|MS Excel (VLOOKUP, Pivots)|ServiceNow|Jira"></p>
+      </div>
+    </div>
+
+    <div class="edu" data-reveal>
+      <div class="edu-score">
+        <b>8.93</b><span class="mono">/ 10.00 CGPA</span>
+      </div>
+      <div class="edu-info">
+        <p class="mono edu-tag">EDUCATION — B.E. COMPUTER SCIENCE &amp; ENGINEERING</p>
+        <h3>Sri Sairam Institute of Technology</h3>
+        <p class="mono edu-date">CHENNAI, TAMIL NADU · JUN 2019 — MAY 2023</p>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ================= 07 CONTACT / FOOTER ================= -->
+<footer id="contact" class="dark">
+  <div class="wrap">
+    <div class="foot-top mono" data-reveal>
+      <span><span class="accent">07 / CONTACT</span> — LET'S TALK</span>
+      <span>CHENNAI — <span class="js-clock">--:--:--</span> IST</span>
+    </div>
+    <h2 class="foot-title" data-reveal>Got a rollout, an AMS cycle <em>or an S/4 migration</em> on the horizon?</h2>
+
+    <div class="contact-cta" data-reveal>
+      <div class="cta-main">
+        <span class="cta-label mono">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+          DROP A LINE — EMAIL
+        </span>
+        <a class="mail-link magnet" href="mailto:sundarakalathi1311@gmail.com">sundarakalathi1311@gmail.com</a>
+        <span class="cta-note mono"><i></i>USUALLY REPLIES WITHIN 24 HOURS</span>
+      </div>
+      <button class="copy-btn js-copy" type="button" data-copy="sundarakalathi1311@gmail.com" aria-label="Copy email address">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      </button>
+    </div>
+
+    <div class="contact-grid" data-stagger>
+      <div class="c-tile">
+        <span class="c-label mono"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>PHONE</span>
+        <a class="c-val" href="tel:+919445979800">+91 94459 79800</a>
+        <span class="c-sub mono">MON – SAT · 09:00 – 19:00 IST</span>
+      </div>
+      <div class="c-tile">
+        <span class="c-label mono"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>LINKEDIN</span>
+        <a class="c-val" href="https://www.linkedin.com/in/sundarakalathi-k-992b011a1/" target="_blank" rel="noopener">sundarakalathi-k</a>
+        <span class="c-sub mono">FULL PROJECT HISTORY</span>
+      </div>
+      <div class="c-tile">
+        <span class="c-label mono"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>BASE</span>
+        <span class="c-val">Chennai, Tamil Nadu</span>
+        <span class="c-sub mono">INDIA · OPEN TO REMOTE</span>
+      </div>
+      <div class="c-tile">
+        <span class="c-label mono"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>STATUS</span>
+        <span class="c-val">Available now</span>
+        <span class="c-sub mono">OPEN TO SAP MM ROLES</span>
+      </div>
+    </div>
+  </div>
+  <div class="foot-giant" aria-hidden="true">SUNDARAKALATHI</div>
+  <div class="foot-bar">
+    <span class="mono">© 2026 SUNDARAKALATHI K — SAP MM</span>
+    <span class="mono">ECC 6.0 / S/4HANA · CHENNAI</span>
+    <button id="toTop" type="button">BACK TO TOP
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V4m0 0l-6 6m6-6l6 6"/></svg></button>
+  </div>
+</footer>
+
+<!-- ============ ANIMATION LIBRARIES ============ -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
+
+<script>
+(function(){
+'use strict';
+window.__SK_BOOTED=true;
+
+/* ---------- env & helpers ---------- */
+var $=function(s){return document.querySelector(s);};
+var $$=function(s){return Array.prototype.slice.call(document.querySelectorAll(s));};
+var REDUCED=!!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches);
+var FINE=!!(window.matchMedia&&matchMedia('(pointer: fine)').matches);
+var G=(typeof gsap!=='undefined')?gsap:null;
+var ST=(G&&typeof ScrollTrigger!=='undefined')?ScrollTrigger:null;
+var ANIM=!!G&&!REDUCED;
+if(G){
+  document.documentElement.classList.add('gsap');
+  if(ST)G.registerPlugin(ScrollTrigger);
+}
+
+/* ---------- Lenis smooth scroll ---------- */
+var LENIS=null;
+if(typeof Lenis!=='undefined'&&!REDUCED){
+  try{
+    LENIS=new Lenis({duration:1.15,smoothWheel:true});
+    LENIS.stop();
+    if(G){
+      LENIS.on('scroll',function(){if(ST)ST.update();});
+      G.ticker.add(function(t){LENIS.raf(t*1000);});
+      G.ticker.lagSmoothing(0);
+    }else{
+      (function raf(t){LENIS.raf(t);requestAnimationFrame(raf);})(0);
+    }
+  }catch(e){LENIS=null;}
+}
+
+function mod(name,fn){try{fn();}catch(e){if(window.console)console.warn('[SK:'+name+']',e);}}
+
+/* ---------- T-code dictionary ---------- */
+var TCODES={
+  'ME51N':'Create Purchase Requisition','ME5A':'Display Purchase Requisitions',
+  'ME41':'Create Request for Quotation','ME47':'Maintain Quotations',
+  'ME21N':'Create Purchase Order','ME2N':'Purchase Orders by Number','ME2M':'Purchase Orders by Material','ME80FN':'Purchasing Document Analysis',
+  'ME31K':'Create Outline Contract','ME31L':'Create Scheduling Agreement',
+  'ME11':'Create Purchasing Info Record','ME01':'Maintain Source List',
+  'MIGO':'Goods Movement (Receipt / Issue)','MMBE':'Stock Overview','MB52':'Warehouse Stocks per Material','MB51':'Material Document List','MB5T':'Stock in Transit',
+  'MIRO':'Invoice Verification','MR11':'GR/IR Account Clearing',
+  'OBYC':'Automatic Account Determination (MM-FI)','CT04':'Create Characteristic','CL01':'Create Class',
+  'BP':'Business Partner (S/4HANA)','MATDOC':'S/4HANA Material Document','LSMW':'Legacy System Migration Workbench','LTMC':'S/4HANA Migration Cockpit','BDC':'Batch Data Communication',
+  'GR/IR':'GR/IR Clearing Account (Goods Receipt / Invoice Receipt)',
+  'RICEFW':'Reports · Interfaces · Conversions · Enhancements · Forms · Workflows'
+};
+function hint(el){
+  if(!el)return;
+  var k=(el.textContent||'').trim().toUpperCase();
+  if(TCODES[k]){el.setAttribute('data-tc',k);el.classList.add('tc-hint');}
+}
+
+/* ---------- word splitter (masked title reveals) ---------- */
+function splitWords(el){
+  if(!el||el.getAttribute('data-split'))return null;
+  el.setAttribute('data-split','1');
+  var units=[];
+  Array.prototype.forEach.call(el.childNodes,function(n){
+    if(n.nodeType===3){
+      n.textContent.split(/(\s+)/).forEach(function(tok){
+        if(!tok)return;
+        if(/^\s+$/.test(tok))units.push({sp:true});
+        else units.push({t:tok});
+      });
+    }else if(n.nodeType===1){units.push({t:n.textContent,em:true});}
+  });
+  el.innerHTML='';
+  var out=[];
+  units.forEach(function(u){
+    if(u.sp){el.appendChild(document.createTextNode(' '));return;}
+    var w=document.createElement('span');w.className='w';
+    var wi=document.createElement(u.em?'em':'span');wi.className='wi';wi.textContent=u.t;
+    w.appendChild(wi);el.appendChild(w);out.push(wi);
+  });
+  return out;
+}
+
+/* ---------- shared hooks ---------- */
+var API={};
+var closeMenuFn=null;
+function closeMenu(){if(closeMenuFn)closeMenuFn();}
+
+/* ---------- unlock / hero intro ---------- */
+var booted=false;
+function unlock(){
+  if(booted)return;booted=true;
+  var l=document.getElementById('loader');
+  if(l){l.classList.add('done');setTimeout(function(){if(l.parentNode)l.parentNode.removeChild(l);},1000);}
+  document.body.classList.remove('loading');
+  document.body.classList.add('loaded');
+  if(LENIS)LENIS.start();
+  if(typeof API.type==='function')API.type();
+  heroIntro();
+  if(ST)setTimeout(function(){ST.refresh();},120);
+}
+function heroIntro(){
+  if(!ANIM)return;
+  var tl=G.timeline({defaults:{ease:'power4.out',duration:.9}});
+  tl.from('.hero-meta',{y:-16,opacity:0,duration:.7},.05)
+    .from('#heroName .ltr',{yPercent:118,rotationX:-55,transformOrigin:'50% 100%',stagger:.03,duration:1.05},.15)
+    .from('.k-big',{yPercent:120,duration:.9},.55)
+    .from('.k-tag',{x:-26,opacity:0,duration:.7},.75)
+    .from('.hero-type',{opacity:0,duration:.6},.85)
+    .from('.hero-blurb',{y:30,opacity:0,duration:.9},.9)
+    .from('.spec-card',{y:40,opacity:0,duration:.9},1.0)
+    .from('.hero-cta .btn',{y:18,opacity:0,duration:.6,stagger:.09},1.05)
+    .from('.scroll-cue',{opacity:0,duration:.7},1.25);
+}
+
+/* ===================== HERO LETTER SPLIT ===================== */
+mod('heroSplit',function(){
+  $$('.split').forEach(function(el){
+    var t=el.textContent;el.textContent='';
+    Array.prototype.forEach.call(t.split(''),function(ch){
+      var s=document.createElement('span');s.className='ltr';s.textContent=ch;el.appendChild(s);
+    });
+  });
+});
+
+/* ===================== SKILLS RENDER ===================== */
+mod('skills',function(){
+  $$('.skill-terms').forEach(function(p){
+    var raw=p.getAttribute('data-terms')||'';
+    var items=raw.split('|').map(function(s){return s.trim();}).filter(function(s){return s.length>0;});
+    p.innerHTML=items.map(function(t){
+      var k=t.toUpperCase();
+      if(TCODES[k])return '<span class="term tc-hint" data-tc="'+k+'">'+t+'</span>';
+      return '<span class="term">'+t+'</span>';
+    }).join('<span class="sep">/</span>');
+  });
+  $$('.chip, .tc').forEach(hint);
+});
+
+/* ===================== STAGGER DELAYS (fallback engine) ===================== */
+mod('stagger',function(){
+  $$('[data-stagger]').forEach(function(c){
+    Array.prototype.forEach.call(c.children,function(el,i){el.style.setProperty('--d',(i*70)+'ms');});
+  });
+});
+
+/* ===================== LOADER ===================== */
+mod('loader',function(){
+  var l=document.getElementById('loader');
+  var LINES=[
+    'INIT&nbsp;&nbsp;... SAP-MM PROFILE / SUNDARAKALATHI K',
+    'LOAD&nbsp;&nbsp;... ME21N · MIGO · MIRO · OBYC — <b>OK</b>',
+    'LOAD&nbsp;&nbsp;... CLIENTS: SEMBCORP / ONMOBILE — <b>OK</b>',
+    'CHECK ... RELEASE STRATEGY — <b>APPROVED</b>',
+    'STATUS ... <b>GO-LIVE</b>'
+  ];
+  if(!l){unlock();return;}
+  if(!ANIM){
+    var log=l.querySelector('.loader-log');
+    LINES.forEach(function(s,i){
+      setTimeout(function(){if(booted)return;var d=document.createElement('div');d.innerHTML=s;if(log)log.appendChild(d);},80+i*130);
+    });
+    setTimeout(unlock,880);
+    l.addEventListener('click',unlock);
+    setTimeout(unlock,3000);
+    return;
+  }
+  var log=l.querySelector('.loader-log'),bar=l.querySelector('.loader-bar i'),pct=l.querySelector('.pct');
+  var divs=LINES.map(function(s){
+    var d=document.createElement('div');d.innerHTML=s;
+    d.style.opacity='0';d.style.transform='translateY(8px)';
+    log.appendChild(d);return d;
+  });
+  var po={v:0};
+  var tl=G.timeline();
+  tl.to(divs,{opacity:1,y:0,duration:.35,ease:'power2.out',stagger:.21},.1)
+    .to(bar,{width:'100%',duration:1.55,ease:'power2.inOut'},.15)
+    .to(po,{v:100,duration:1.55,ease:'power2.inOut',onUpdate:function(){pct.textContent=Math.round(po.v)+'%';}},.15)
+    .to(l,{yPercent:-100,duration:.85,ease:'expo.inOut',delay:.12,
+      onStart:unlock,
+      onComplete:function(){if(l.parentNode)l.parentNode.removeChild(l);}});
+  l.addEventListener('click',function(){tl.timeScale(3.5);});
+  setTimeout(function(){if(!booted)tl.timeScale(4);},2800);
+});
+
+/* ===================== TYPING ===================== */
+mod('typing',function(){
+  var el=document.getElementById('type');if(!el)return;
+  var phrases=['SAP MM FUNCTIONAL CONSULTANT','PROCURE-TO-PAY ARCHITECT','S/4HANA ROLLOUT SPECIALIST','MM-FI INTEGRATION','INVENTORY & MRP'];
+  if(REDUCED){el.textContent=phrases[0];return;}
+  var pi=0,ci=0,del=false,started=false;
+  function step(){
+    var p=phrases[pi];
+    ci+=del?-1:1;
+    el.textContent=p.slice(0,ci);
+    var t=del?24:46+Math.random()*36;
+    if(!del&&ci===p.length){del=true;t=2100;}
+    if(del&&ci===0){del=false;pi=(pi+1)%phrases.length;t=480;}
+    setTimeout(step,t);
+  }
+  function start(){if(started)return;started=true;step();}
+  API.type=start;
+  if(document.body.classList.contains('loaded'))start();
+});
+
+/* ===================== LIVE IST CLOCK ===================== */
+mod('clock',function(){
+  var els=$$('.js-clock');if(!els.length)return;
+  var fmt=null;
+  try{fmt=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Kolkata',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});}catch(e){fmt=null;}
+  function up(){
+    var t=fmt?fmt.format(new Date()):new Date().toTimeString().slice(0,8);
+    els.forEach(function(el){el.textContent=t;});
+  }
+  up();setInterval(up,1000);
+});
+
+/* ===================== SCROLL FX (GSAP) or fallback reveal ===================== */
+function fallbackReveal(){
+  var els=$$('[data-reveal],[data-stagger]');
+  if(!('IntersectionObserver' in window)){els.forEach(function(el){el.classList.add('is-in');});return;}
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(en){if(en.isIntersecting){en.target.classList.add('is-in');io.unobserve(en.target);}});
+  },{threshold:.12,rootMargin:'0px 0px -6% 0px'});
+  els.forEach(function(el){io.observe(el);});
+}
+mod('scrollfx',function(){
+  if(!ANIM||!ST){fallbackReveal();return;}
+  G.utils.toArray('[data-reveal]').forEach(function(el){
+    if(el.classList.contains('sec-title')||el.classList.contains('foot-title'))return;
+    G.from(el,{y:44,opacity:0,duration:1,ease:'power3.out',
+      scrollTrigger:{trigger:el,start:'top 87%',once:true}});
+  });
+  G.utils.toArray('[data-stagger]').forEach(function(c){
+    G.from(c.children,{y:26,opacity:0,duration:.8,ease:'power3.out',stagger:.07,
+      scrollTrigger:{trigger:c,start:'top 86%',once:true}});
+  });
+  G.utils.toArray('.sec-top .rule').forEach(function(r){
+    G.from(r,{scaleX:0,transformOrigin:'0 50%',duration:1.2,ease:'power3.inOut',
+      scrollTrigger:{trigger:r,start:'top 90%',once:true}});
+  });
+  G.utils.toArray('.sec-title, .foot-title').forEach(function(t){
+    var w=splitWords(t);if(!w||!w.length)return;
+    G.from(w,{yPercent:120,duration:.85,ease:'power4.out',stagger:.055,
+      scrollTrigger:{trigger:t,start:'top 86%',once:true}});
+  });
+  var wm=$('.hero-mm');
+  if(wm)G.fromTo(wm,{yPercent:-10},{yPercent:16,ease:'none',
+    scrollTrigger:{trigger:'.hero',start:'top top',end:'bottom top',scrub:true}});
+  var fg=$('.foot-giant');
+  if(fg)G.fromTo(fg,{yPercent:26},{yPercent:-12,ease:'none',
+    scrollTrigger:{trigger:'#contact',start:'top bottom',end:'bottom bottom',scrub:true}});
+  if($('#progress'))G.to('#progress',{width:'100%',ease:'none',
+    scrollTrigger:{start:0,end:'max',scrub:.3}});
+  G.utils.toArray('.skill-row').forEach(function(row){
+    var terms=row.querySelectorAll('.term');
+    if(terms.length)G.from(terms,{y:12,opacity:0,duration:.5,ease:'power2.out',stagger:.025,
+      scrollTrigger:{trigger:row,start:'top 88%',once:true}});
+  });
+  window.addEventListener('load',function(){ST.refresh();});
+});
+
+/* ===================== COUNTERS ===================== */
+mod('counters',function(){
+  var els=$$('.stat-num');if(!els.length)return;
+  function setFinal(el){el.textContent=(+el.getAttribute('data-count')).toLocaleString('en-IN');}
+  if(ANIM&&ST){
+    els.forEach(function(el){
+      ST.create({trigger:el,start:'top 85%',once:true,onEnter:function(){
+        var o={v:0},t=+el.getAttribute('data-count');
+        G.to(o,{v:t,duration:1.8,ease:'power3.out',
+          onUpdate:function(){el.textContent=Math.round(o.v).toLocaleString('en-IN');}});
+      }});
+    });
+    return;
+  }
+  if(!('IntersectionObserver' in window)){els.forEach(setFinal);return;}
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(en){
+      if(!en.isIntersecting)return;
+      io.unobserve(en.target);
+      var el=en.target,target=+el.getAttribute('data-count'),t0=null,DUR=1500;
+      if(REDUCED){setFinal(el);return;}
+      function f(now){
+        if(t0===null)t0=now;
+        var p=Math.min(1,(now-t0)/DUR),e=1-Math.pow(1-p,3);
+        el.textContent=Math.round(target*e).toLocaleString('en-IN');
+        if(p<1)requestAnimationFrame(f);
+      }
+      requestAnimationFrame(f);
+    });
+  },{threshold:.5});
+  els.forEach(function(el){io.observe(el);});
+});
+
+/* ===================== ACCORDION ===================== */
+mod('accordion',function(){
+  var accs=$$('.acc');if(!accs.length)return;
+  var allBtn=document.getElementById('accAll');
+  function body(a){return a.querySelector('.acc-body');}
+  function head(a){return a.querySelector('.acc-head');}
+  function setOpen(a,open){
+    var b=body(a),h=head(a);if(!b)return;
+    if(open){
+      a.classList.add('open');
+      if(h)h.setAttribute('aria-expanded','true');
+      if(ANIM){
+        G.set(b,{height:'auto'});
+        G.from(b,{height:0,duration:.6,ease:'power3.inOut',
+          onComplete:function(){G.set(b,{height:'auto'});if(ST)ST.refresh();}});
+        var chips=b.querySelectorAll('.chip');
+        if(chips.length)G.from(chips,{y:14,opacity:0,duration:.45,ease:'power2.out',stagger:.028,delay:.18,clearProps:'all'});
+      }else{
+        b.style.height=b.scrollHeight+'px';
+        b.addEventListener('transitionend',function te(e){
+          if(e.propertyName!=='height')return;
+          b.removeEventListener('transitionend',te);
+          if(a.classList.contains('open'))b.style.height='auto';
+        });
+      }
+    }else{
+      if(h)h.setAttribute('aria-expanded','false');
+      if(ANIM){
+        G.to(b,{height:0,duration:.5,ease:'power3.inOut',
+          onComplete:function(){a.classList.remove('open');if(ST)ST.refresh();}});
+      }else{
+        if(getComputedStyle(b).height!=='0px'){b.style.height=b.scrollHeight+'px';void b.offsetWidth;}
+        a.classList.remove('open');
+        b.style.height='0px';
+      }
+    }
+  }
+  accs.forEach(function(a){
+    var h=head(a);if(!h)return;
+    h.addEventListener('click',function(){
+      if(a.classList.contains('open'))setOpen(a,false);
+      else{
+        accs.forEach(function(o){if(o!==a&&o.classList.contains('open'))setOpen(o,false);});
+        setOpen(a,true);
+      }
+      syncAll();
+    });
+  });
+  function anyClosed(){return accs.some(function(a){return !a.classList.contains('open');});}
+  function syncAll(){if(allBtn)allBtn.textContent=anyClosed()?'EXPAND ALL':'COLLAPSE ALL';}
+  if(allBtn)allBtn.addEventListener('click',function(){
+    var expand=anyClosed();
+    accs.forEach(function(a){
+      if(a.classList.contains('open')!==expand)setOpen(a,expand);
+    });
+    syncAll();
+  });
+  var a0=accs[0];
+  a0.classList.add('open');
+  if(head(a0))head(a0).setAttribute('aria-expanded','true');
+  var b0=body(a0);if(b0)b0.style.height='auto';
+  syncAll();
+  window.addEventListener('resize',function(){
+    accs.forEach(function(a){
+      if(a.classList.contains('open')){var b=body(a);if(b)b.style.height='auto';}
+    });
+  });
+});
+
+/* ===================== INTEGRATION ORBIT ===================== */
+mod('orbit',function(){
+  var orbit=$('.orbit');if(!orbit)return;
+  var cap=document.getElementById('orbitCaption');
+  var nodes=$$('.orbit-node');
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(en){if(en.isIntersecting){orbit.classList.add('is-in');io.disconnect();}});
+    },{threshold:.3});
+    io.observe(orbit);
+  }else orbit.classList.add('is-in');
+  if(ANIM&&ST){
+    ST.create({trigger:orbit,start:'top 78%',once:true,onEnter:function(){
+      G.from('.orbit-core',{scale:0,duration:.8,ease:'back.out(1.7)'});
+      G.from(nodes,{scale:0,duration:.7,ease:'back.out(2)',stagger:.1,delay:.25});
+    }});
+  }
+  nodes.forEach(function(n){
+    function act(){
+      nodes.forEach(function(x){x.classList.toggle('on',x===n);});
+      if(cap){
+        cap.textContent=n.getAttribute('data-info')||'';
+        if(ANIM)G.fromTo(cap,{y:8,opacity:0},{y:0,opacity:1,duration:.45,ease:'power2.out',overwrite:true});
+        else{cap.classList.remove('swap');void cap.offsetWidth;cap.classList.add('swap');}
+      }
+    }
+    n.addEventListener('mouseenter',act);
+    n.addEventListener('click',act);
+    n.addEventListener('focus',act);
+    if(ANIM){
+      n.addEventListener('mouseenter',function(){G.to(n,{scale:1.12,duration:.35,ease:'power3.out'});});
+      n.addEventListener('mouseleave',function(){G.to(n,{scale:1,duration:.35,ease:'power3.out'});});
+    }
+  });
+});
+
+/* ===================== MARQUEE — dependency-free rAF engine ===================== */
+mod('marquee',function(){
+  var track=$('.ticker-track');
+  if(!track||!window.requestAnimationFrame)return;
+  var groups=track.querySelectorAll('.ticker-group');
+  if(!groups.length)return;
+  var x=0,vel=0,lastScroll=window.pageYOffset||0,last=null,took=false;
+  window.addEventListener('scroll',function(){
+    var y=window.pageYOffset||0;
+    vel+=(y-lastScroll)*0.22;
+    if(vel>520)vel=520;else if(vel<-520)vel=-520;
+    lastScroll=y;
+  },{passive:true});
+  function loop(now){
+    if(!took){took=true;track.style.animation='none';}
+    if(last===null)last=now;
+    var dt=Math.min(64,now-last)/1000;last=now;
+    var speed=85+vel;
+    x-=speed*dt;
+    vel*=Math.pow(0.05,dt);
+    var w=groups[0].getBoundingClientRect().width;
+    if(w>0){
+      if(x<=-w)x+=w;
+      if(x>0)x-=w;
+      track.style.transform='translate3d('+x.toFixed(2)+'px,0,0)';
+    }
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+});
+
+/* ===================== P2P AUTO CAROUSEL — pure rAF clock (no GSAP dependency) ===================== */
+mod('p2p',function(){
+  var root=document.getElementById('p2p');if(!root)return;
+  var stepsEl=document.getElementById('p2pSteps'),fill=document.getElementById('p2pFill'),
+      bar=document.getElementById('p2pBar'),countEl=document.getElementById('p2pCount'),
+      autoEl=document.getElementById('p2pAuto'),
+      idxEl=document.getElementById('pdIdx'),titleEl=document.getElementById('pdTitle'),
+      descEl=document.getElementById('pdDesc'),chipsEl=document.getElementById('pdChips'),
+      prevB=document.getElementById('p2pPrev'),nextB=document.getElementById('p2pNext'),
+      playB=document.getElementById('p2pPlay'),playTxt=document.getElementById('p2pPlayTxt'),
+      inner=document.getElementById('p2pInner');
+  if(!stepsEl||!window.requestAnimationFrame)return;
+
+  var STAGES=[
+    {tcode:'ME51N',title:'Purchase Requisition',
+     desc:'Demand enters the pipeline — raised manually in ME51N or planned by MRP. Source determination picks the vendor, and a classification-based release strategy (CT04 / CL01) makes sure the right people approve the right amounts.',
+     chips:['ME51N','ME5A','Source Determination','Release Strategy','CT04','CL01','MRP']},
+    {tcode:'ME41',title:'RFQ & Quotations',
+     desc:'Competing RFQs go out, quotations come back. Bids are compared on price and delivery date, and the winning conditions are written into Purchasing Info Records and source lists — so future sourcing is automatic.',
+     chips:['ME41','ME47','ME11','ME01','Vendor Evaluation']},
+    {tcode:'ME21N',title:'Purchase Order',
+     desc:'The commitment. Standard purchase orders, outline contracts and scheduling agreements — with quota arrangements and pricing procedures ensuring the right supplier, the right conditions, every time.',
+     chips:['ME21N','ME31K','ME31L','Quota Arrangement','Pricing Procedure']},
+    {tcode:'MIGO',title:'Goods Receipt',
+     desc:'MIGO posts the goods movement. Stock updates across MMBE and MB52, batches and split valuation apply, and OBYC fires the automatic MM-FI posting with a GR/IR entry Finance can trust.',
+     chips:['MIGO','MMBE','MB52','OBYC','GR/IR','Batch Determination','Split Valuation']},
+    {tcode:'MIRO',title:'Invoice Verification',
+     desc:'MIRO runs the three-way match — PO, goods receipt and invoice. Tolerance keys police variances, MR11 clears the GR/IR noise, and a clean, MSME-compliant vendor payment closes the loop.',
+     chips:['MIRO','MR11','Tolerance Keys','MM-FI','MSME Compliance']}
+  ];
+  var N=STAGES.length,MS=4200,CIRC=2*Math.PI*33;
+
+  STAGES.forEach(function(s,i){
+    var b=document.createElement('button');
+    b.type='button';b.className='p2p-step';b.setAttribute('aria-label',s.title);
+    b.innerHTML='<span class="p2p-dot" data-tc="'+s.tcode+'">'+
+      '<svg class="ring" viewBox="0 0 70 70" aria-hidden="true"><circle cx="35" cy="35" r="33"/></svg>'+
+      s.tcode+'</span>'+
+      '<span class="p2p-lab"><span class="s-idx">0'+(i+1)+'</span><span class="s-name">'+s.title+'</span></span>';
+    b.addEventListener('click',function(){go(i);});
+    stepsEl.appendChild(b);
+  });
+  var stepBtns=$$('#p2pSteps .p2p-step');
+  var rings=stepBtns.map(function(b){return b.querySelector('.ring circle');});
+
+  var cur=0,playing=true,elapsed=0,last=null;
+
+  function render(i){
+    var s=STAGES[i];
+    if(idxEl)idxEl.textContent='0'+(i+1);
+    if(titleEl)titleEl.textContent=s.title;
+    if(descEl)descEl.textContent=s.desc;
+    if(countEl)countEl.textContent='0'+(i+1)+' / 0'+N;
+    if(chipsEl){
+      chipsEl.innerHTML='';
+      s.chips.forEach(function(c,j){
+        var sp=document.createElement('span');sp.className='chip';sp.textContent=c;
+        sp.style.animationDelay=(90+j*45)+'ms';
+        hint(sp);chipsEl.appendChild(sp);
+      });
+    }
+  }
+  function activate(i,swap){
+    cur=((i%N)+N)%N;
+    stepBtns.forEach(function(b,j){
+      b.classList.toggle('is-active',j===cur);
+      b.classList.toggle('is-done',j<cur);
+    });
+    if(fill)fill.style.setProperty('--fill',(cur/(N-1)*100)+'%');
+    render(cur);
+    if(swap&&inner){inner.classList.remove('swap');void inner.offsetWidth;inner.classList.add('swap');}
+  }
+  function go(i){elapsed=0;activate(i,true);}
+
+  function loop(now){
+    if(last===null)last=now;
+    var dt=Math.min(64,now-last);last=now;
+    if(playing)elapsed+=dt;
+    if(elapsed>=MS){elapsed=0;activate(cur+1,true);}
+    var p=Math.min(1,elapsed/MS);
+    if(bar)bar.style.width=(p*100)+'%';
+    var r=rings[cur];
+    if(r)r.style.strokeDashoffset=(CIRC*(1-p)).toFixed(1);
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+
+  function syncUI(){
+    if(playB){playB.classList.toggle('paused',!playing);playB.setAttribute('aria-pressed',String(!playing));
+      playB.setAttribute('aria-label',playing?'Pause auto-play':'Resume auto-play');}
+    if(playTxt)playTxt.textContent=playing?'PAUSE':'PLAY';
+    if(autoEl){
+      autoEl.classList.toggle('paused',!playing);
+      var b=autoEl.querySelector('b');if(b)b.textContent=playing?'AUTO':'PAUSED';
+    }
+  }
+  if(prevB)prevB.addEventListener('click',function(){go(cur-1);});
+  if(nextB)nextB.addEventListener('click',function(){go(cur+1);});
+  if(playB)playB.addEventListener('click',function(){playing=!playing;syncUI();});
+
+  var sx=null;
+  root.addEventListener('pointerdown',function(e){if(e.pointerType!=='mouse')sx=e.clientX;});
+  root.addEventListener('pointerup',function(e){
+    if(sx===null)return;
+    var d=e.clientX-sx;sx=null;
+    if(Math.abs(d)>45)go(d<0?cur+1:cur-1);
+  });
+  root.addEventListener('keydown',function(e){
+    if(e.key==='ArrowLeft'){e.preventDefault();go(cur-1);}
+    else if(e.key==='ArrowRight'){e.preventDefault();go(cur+1);}
+  });
+
+  activate(0,false);
+  syncUI();
+});
+
+/* ===================== TOOLTIP ===================== */
+mod('tooltip',function(){
+  if(!FINE)return;
+  var tip=document.getElementById('tip');if(!tip)return;
+  var on=false,qx=null,qy=null;
+  if(ANIM){
+    qx=G.quickTo(tip,'x',{duration:.18,ease:'power2.out'});
+    qy=G.quickTo(tip,'y',{duration:.18,ease:'power2.out'});
+  }
+  document.addEventListener('mouseover',function(e){
+    var t=(e.target&&e.target.closest)?e.target.closest('[data-tc]'):null;
+    if(t&&TCODES[t.getAttribute('data-tc')]){
+      tip.innerHTML='<b>'+t.getAttribute('data-tc')+'</b> — '+TCODES[t.getAttribute('data-tc')];
+      tip.classList.add('on');on=true;
+    }else if(on){tip.classList.remove('on');on=false;}
+  });
+  document.addEventListener('mousemove',function(e){
+    if(!on)return;
+    var w=tip.offsetWidth,h=tip.offsetHeight;
+    var x=e.clientX+16,y=e.clientY+18;
+    if(x+w>innerWidth-10)x=e.clientX-w-16;
+    if(y+h>innerHeight-10)y=e.clientY-h-16;
+    if(qx){qx(x);qy(y);}else tip.style.transform='translate('+x+'px,'+y+'px)';
+  });
+  document.addEventListener('scroll',function(){if(on){tip.classList.remove('on');on=false;}},{passive:true});
+});
+
+/* ===================== NAV ===================== */
+mod('navscroll',function(){
+  var nav=document.getElementById('nav');if(!nav)return;
+  var lastY=window.pageYOffset||0,hidden=false,queued=false;
+  function move(v){
+    if(ANIM)G.to(nav,{yPercent:v,duration:.5,ease:'power3.out',overwrite:true});
+    else nav.style.transform=v?'translateY('+v+'%)':'';
+  }
+  function upd(){
+    queued=false;
+    var y=window.pageYOffset||document.documentElement.scrollTop||0;
+    nav.classList.toggle('scrolled',y>30);
+    if(!document.body.classList.contains('lock')){
+      if(y>160&&y>lastY+6&&!hidden){hidden=true;move(-110);}
+      else if((y<lastY-6||y<160)&&hidden){hidden=false;move(0);}
+    }
+    lastY=y;
+    if(!(ANIM&&ST)){
+      var p=document.getElementById('progress');
+      if(p){var h=document.documentElement.scrollHeight-innerHeight;p.style.width=(h>0?y/h*100:0)+'%';}
+    }
+  }
+  window.addEventListener('scroll',function(){if(!queued){queued=true;requestAnimationFrame(upd);}},{passive:true});
+  upd();
+});
+
+/* ===================== SECTION SPY ===================== */
+mod('spy',function(){
+  if(!('IntersectionObserver' in window))return;
+  var links=$$('.nav-link');if(!links.length)return;
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(en){
+      if(!en.isIntersecting)return;
+      var id='#'+en.target.id;
+      links.forEach(function(a){a.classList.toggle('active',a.getAttribute('href')===id);});
+    });
+  },{rootMargin:'-40% 0px -55% 0px'});
+  ['profile','expertise','process','experience','contact'].forEach(function(id){
+    var s=document.getElementById(id);if(s)io.observe(s);
+  });
+});
+
+/* ===================== MOBILE MENU ===================== */
+mod('menu',function(){
+  var btn=document.getElementById('menuBtn'),menu=document.getElementById('menu');
+  if(!btn||!menu)return;
+  function set(open){
+    menu.classList.toggle('open',open);
+    btn.classList.toggle('x',open);
+    btn.setAttribute('aria-expanded',open?'true':'false');
+    document.body.classList.toggle('lock',open);
+    if(LENIS){open?LENIS.stop():LENIS.start();}
+  }
+  closeMenuFn=function(){set(false);};
+  btn.addEventListener('click',function(){set(!menu.classList.contains('open'));});
+  Array.prototype.forEach.call(menu.querySelectorAll('a'),function(a){
+    a.addEventListener('click',function(){set(false);});
+  });
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')set(false);});
+});
+
+/* ===================== SMOOTH ANCHORS ===================== */
+mod('anchors',function(){
+  $$('a[href^="#"]').forEach(function(a){
+    a.addEventListener('click',function(e){
+      var id=a.getAttribute('href');
+      if(!id||id.length<2)return;
+      var t=document.querySelector(id);if(!t)return;
+      e.preventDefault();
+      closeMenu();
+      if(LENIS)LENIS.scrollTo(t,{offset:-76,duration:1.25});
+      else{
+        try{t.scrollIntoView({behavior:REDUCED?'auto':'smooth',block:'start'});}
+        catch(err){t.scrollIntoView();}
+      }
+    });
+  });
+});
+
+/* ===================== COPY EMAIL + TOAST ===================== */
+mod('copy',function(){
+  var toastEl=document.getElementById('toast'),toastTxt=document.getElementById('toastText'),t;
+  if(!toastEl)return;
+  function showToast(msg){
+    if(toastTxt)toastTxt.textContent=msg;
+    toastEl.classList.add('show');
+    clearTimeout(t);t=setTimeout(function(){toastEl.classList.remove('show');},2600);
+  }
+  $$('.js-copy').forEach(function(b){
+    b.addEventListener('click',function(){
+      var v=b.getAttribute('data-copy')||'';
+      function fallback(){
+        try{
+          var ta=document.createElement('textarea');ta.value=v;
+          ta.style.position='fixed';ta.style.opacity='0';
+          document.body.appendChild(ta);ta.select();
+          document.execCommand('copy');document.body.removeChild(ta);
+          showToast('COPIED — '+v);
+        }catch(e){showToast(v);}
+      }
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(v).then(function(){showToast('COPIED — '+v);},fallback);
+      }else fallback();
+    });
+  });
+});
+
+/* ===================== BACK TO TOP ===================== */
+mod('toTop',function(){
+  var b=document.getElementById('toTop');if(!b)return;
+  b.addEventListener('click',function(){
+    if(LENIS)LENIS.scrollTo(0,{duration:1.3});
+    else{
+      try{window.scrollTo({top:0,behavior:REDUCED?'auto':'smooth'});}
+      catch(e){window.scrollTo(0,0);}
+    }
+  });
+});
+
+/* ===================== CUSTOM CURSOR ===================== */
+mod('cursor',function(){
+  if(!FINE||REDUCED)return;
+  var dot=$('.cursor-dot'),ring=$('.cursor-ring');
+  if(!dot||!ring)return;
+  document.documentElement.classList.add('cursor-on');
+  var dx,dy,rx,ry;
+  if(ANIM){
+    dx=G.quickTo(dot,'x',{duration:.1,ease:'power3'});dy=G.quickTo(dot,'y',{duration:.1,ease:'power3'});
+    rx=G.quickTo(ring,'x',{duration:.42,ease:'power3'});ry=G.quickTo(ring,'y',{duration:.42,ease:'power3'});
+  }else{
+    var x=innerWidth/2,y=innerHeight/2,px=x,py=y;
+  }
+  document.addEventListener('mousemove',function(e){
+    if(dx){dx(e.clientX);dy(e.clientY);rx(e.clientX);ry(e.clientY);}
+    else{x=e.clientX;y=e.clientY;dot.style.transform='translate('+x+'px,'+y+'px)';}
+  });
+  if(!ANIM){
+    (function loop(){px+=(x-px)*.16;py+=(y-py)*.16;ring.style.transform='translate('+px+'px,'+py+'px)';requestAnimationFrame(loop);})();
+  }
+  var sel='a,button,[data-tc],.term,.p2p-step,.acc-head';
+  document.addEventListener('mouseover',function(e){
+    var hit=false;
+    try{hit=!!(e.target&&e.target.closest&&e.target.closest(sel));}catch(err){}
+    document.documentElement.classList.toggle('cursor-hover',hit);
+  });
+});
+
+/* ===================== MAGNETIC ELEMENTS ===================== */
+mod('magnet',function(){
+  if(!FINE||REDUCED)return;
+  $$('.magnet').forEach(function(el){
+    if(ANIM){
+      var qx=G.quickTo(el,'x',{duration:.4,ease:'power3'}),
+          qy=G.quickTo(el,'y',{duration:.4,ease:'power3'});
+      el.addEventListener('mousemove',function(e){
+        var r=el.getBoundingClientRect();
+        qx((e.clientX-r.left-r.width/2)*.25);
+        qy((e.clientY-r.top-r.height/2)*.25);
+      });
+      el.addEventListener('mouseleave',function(){qx(0);qy(0);});
+    }else{
+      el.addEventListener('mousemove',function(e){
+        var r=el.getBoundingClientRect();
+        el.style.transform='translate('+((e.clientX-r.left-r.width/2)*.22)+'px,'+((e.clientY-r.top-r.height/2)*.22)+'px)';
+      });
+      el.addEventListener('mouseleave',function(){el.style.transform='';});
+    }
+  });
+});
+})();
+</script>
+</body>
+</html>
